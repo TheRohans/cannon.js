@@ -130,7 +130,8 @@ export class ConvexPolyhedron extends Shape {
   }
 
   /**
-   * Compute the normals of the faces. Will reuse existing Vec3 objects in the .faceNormals array if they exist.
+   * Compute the normals of the faces. Will reuse existing Vec3 objects in
+   * the .faceNormals array if they exist.
    * @method computeNormals
    */
   computeNormals() {
@@ -151,15 +152,20 @@ export class ConvexPolyhedron extends Shape {
         this.getFaceNormal(i, n);
         n.negate(n);
         this.faceNormals[i] = n;
-        const vertex = this.vertices[this.faces[i][0]];
-        if (n.dot(vertex) < 0) {
-          console.warn('.faceNormals[' + i + '] = Vec3(' + n.toString()
-            + ') looks like it points into the shape? The vertices follow. Make sure they are ' +
-            ' ordered CCW around the normal, using the right hand rule.');
-          for (let j = 0; j < this.faces[i].length; j++) {
-            console.warn('.vertices[' + this.faces[i][j] + '] = Vec3(' + this.vertices[this.faces[i][j]].toString() + ')');
-          }
-        }
+
+        // TODO: If you pass in normals that render correctly and seem to be in CCW order
+        // this throws errors. I think there is some subtle bug that is fixed by alwasy computing
+        // the normals here. I am punting on this for now - ConvexConvex needs tests!
+        //
+        // const vertex = this.vertices[this.faces[i][0]];
+        // if (n.dot(vertex) < 0) {
+        //   console.warn('.faceNormals[' + i + '] = Vec3(' + n.toString()
+        //     + ') looks like it points into the shape? The vertices follow. Make sure they are ' +
+        //     ' ordered CCW around the normal, using the right hand rule.');
+        //   for (let j = 0; j < this.faces[i].length; j++) {
+        //     console.warn('.vertices[' + this.faces[i][j] + '] = Vec3(' + this.vertices[this.faces[i][j]].toString() + ')');
+        //   }
+        // }
       }
     }
   }

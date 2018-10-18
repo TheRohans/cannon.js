@@ -1,23 +1,12 @@
 import { Vec3 } from '../math/Vec3';
-import { Box } from './Box';
 import { Quaternion } from '../math/Quaternion';
 import { HullResult, ConvexPolyhedron } from './ConvexPolyhedron';
+import { mockBoxHull, mockPolyBox } from '../main.test';
 
 describe('ConvexPolyhedron', () => {
 
-  const createBoxHull = (size: number = 0.5) => {
-    const box = new Box(new Vec3(size, size, size));
-    return box.convexPolyhedronRepresentation;
-  };
-
-  const createPolyBox = (sx: number, sy: number, sz: number) => {
-    const v = Vec3;
-    const box = new Box(new Vec3(sx, sy, sz));
-    return box.convexPolyhedronRepresentation;
-  };
-
   it('should calculateWorldAABB', () => {
-      const poly = createPolyBox(1, 1, 1);
+      const poly = mockPolyBox(1, 1, 1);
       const min = new Vec3();
       const max = new Vec3();
       poly.calculateWorldAABB(new Vec3(1, 0, 0), // Translate 2 x in world
@@ -31,7 +20,7 @@ describe('ConvexPolyhedron', () => {
   });
 
   it('should clipFaceAgainstPlane', () => {
-      const h = createBoxHull();
+      const h = mockBoxHull();
 
       // Four points 1 unit below the plane z=0 - we assume to get back 4
       let inverts = [  new Vec3(-0.2, -0.2, -1),
@@ -61,7 +50,7 @@ describe('ConvexPolyhedron', () => {
 
   it('should clipFaceAgainstHull', () => {
       // Create box
-      const hullA = createBoxHull(0.5);
+      const hullA = mockBoxHull(0.5);
       const res: HullResult[] = [];
       const sepNormal = new Vec3(0, 0, 1);
 
@@ -87,61 +76,63 @@ describe('ConvexPolyhedron', () => {
   });
 
   it('should clipAgainstHull', () => {
-      const hullA = createBoxHull(0.6),
-          posA = new Vec3(-0.5, 0, 0),
-          quatA = new Quaternion();
+    const hullA = mockBoxHull(0.6),
+        posA = new Vec3(-0.5, 0, 0),
+        quatA = new Quaternion();
 
-      const hullB = createBoxHull(0.5),
-          posB = new Vec3(0.5, 0, 0),
-          quatB = new Quaternion();
+    const hullB = mockBoxHull(0.5),
+        posB = new Vec3(0.5, 0, 0),
+        quatB = new Quaternion();
 
-      const sepaxis = new Vec3();
-      const found = hullA.findSeparatingAxis(hullB, posA, quatA, posB, quatB, sepaxis);
-      const result: HullResult[] = [];
-      quatB.setFromAxisAngle(new Vec3(0, 0, 1), Math.PI / 4);
+    const sepaxis = new Vec3();
+    const found = hullA.findSeparatingAxis(hullB, posA, quatA, posB, quatB, sepaxis);
+    const result: HullResult[] = [];
+    quatB.setFromAxisAngle(new Vec3(0, 0, 1), Math.PI / 4);
 
-      hullA.clipAgainstHull(posA, quatA, hullB, posB, quatB, sepaxis, -100, 100, result);
-      // console.log("result:",result);
-      // console.log("done....");
-      result.forEach( r => {
-        expect(r.depth).toEqual(-0.30710678118654733);
-      });
+    hullA.clipAgainstHull(posA, quatA, hullB, posB, quatB, sepaxis, -100, 100, result);
+    // console.log("result:",result);
+    // console.log("done....");
+    result.forEach( r => {
+      expect(r.depth).toEqual(-0.30710678118654733);
+    });
   });
 
   it('should testSepAxis', () => {
-      const hullA = createBoxHull(0.5),
+      const hullA = mockBoxHull(0.5),
       posA = new Vec3(-0.2, 0, 0),
       quatA = new Quaternion();
 
-      const hullB = createBoxHull(),
+      const hullB = mockBoxHull(),
       posB = new Vec3(0.2, 0, 0),
       quatB = new Quaternion();
 
       const sepAxis = new Vec3(1, 0, 0);
-      const found1 = hullA.testSepAxis(sepAxis, hullB, posA, quatA, posB, quatB);
+      const [found1, depth] = hullA.testSepAxis(sepAxis, hullB, posA, quatA, posB, quatB);
       // ,"didnt find sep axis depth");
-      expect(found1).toEqual(0.6);
+      expect(found1).toBeTruthy();
+      expect(depth).toEqual(0.6);
 
       // Move away
       posA.x = -5;
-      const found2 = hullA.testSepAxis(sepAxis, hullB, posA, quatA, posB, quatB);
+      const [found2, dp] = hullA.testSepAxis(sepAxis, hullB, posA, quatA, posB, quatB);
       // "found separating axis though there are none");
       expect(found2).toBeFalsy();
 
       // Inclined 45 degrees, what happens then?
       posA.x = 1;
       quatB.setFromAxisAngle(new Vec3(0, 0, 1), Math.PI / 4);
-      const found3 = hullA.testSepAxis(sepAxis, hullB, posA, quatA, posB, quatB);
+      const [found3, depth3] = hullA.testSepAxis(sepAxis, hullB, posA, quatA, posB, quatB);
       // ,"Did not fetch");
-      expect(typeof(found3)).toEqual('number');
+      expect(typeof(found3)).toEqual('boolean');
+      expect(typeof(depth3)).toEqual('number');
   });
 
   it('should findSepAxis', () => {
-      const hullA = createBoxHull(),
+      const hullA = mockBoxHull(),
           posA = new Vec3(-0.2, 0, 0),
           quatA = new Quaternion();
 
-      const hullB = createBoxHull(),
+      const hullB = mockBoxHull(),
           posB = new Vec3(0.2, 0, 0),
           quatB = new Quaternion();
 
@@ -157,7 +148,7 @@ describe('ConvexPolyhedron', () => {
   });
 
   it('should project', () => {
-      const convex = createBoxHull(0.5),
+      const convex = mockBoxHull(0.5),
           pos = new Vec3(0, 0, 0),
           quat = new Quaternion();
 

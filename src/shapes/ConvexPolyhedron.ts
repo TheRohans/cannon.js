@@ -205,6 +205,8 @@ export class ConvexPolyhedron extends Shape {
     return ConvexPolyhedron.computeNormal(va, vb, vc, target);
   }
 
+
+  private cah_WorldNormal = new Vec3();
   /**
    * @method clipAgainstHull
    * @param {Vec3} posA
@@ -220,9 +222,8 @@ export class ConvexPolyhedron extends Shape {
    */
   clipAgainstHull(posA: Vec3, quatA: Quaternion, hullB: ConvexPolyhedron, posB: Vec3,
     quatB: Quaternion, separatingNormal: Vec3, minDist: number, maxDist: number, result: HullResult[]) {
-    const cah_WorldNormal = new Vec3();
 
-    const WorldNormal = cah_WorldNormal;
+    const WorldNormal = this.cah_WorldNormal;
     const hullA = this;
     const curMaxDist = maxDist;
     let closestFaceB = -1;
@@ -260,6 +261,14 @@ export class ConvexPolyhedron extends Shape {
     }
   }
 
+
+  private fsa_faceANormalWS3 = new Vec3();
+  private fsa_Worldnormal1 = new Vec3();
+  private fsa_deltaC = new Vec3();
+  private fsa_worldEdge0 = new Vec3();
+  private fsa_worldEdge1 = new Vec3();
+  private fsa_Cross = new Vec3();
+
   /**
    * Find the separating axis between this hull and another
    * @method findSeparatingAxis
@@ -273,19 +282,13 @@ export class ConvexPolyhedron extends Shape {
    */
   findSeparatingAxis(hullB: ConvexPolyhedron, posA: Vec3, quatA: Quaternion, posB: Vec3,
     quatB: Quaternion, target: Vec3, faceListA?: any[], faceListB?: any[]): boolean {
-    const fsa_faceANormalWS3 = new Vec3(),
-      fsa_Worldnormal1 = new Vec3(),
-      fsa_deltaC = new Vec3(),
-      fsa_worldEdge0 = new Vec3(),
-      fsa_worldEdge1 = new Vec3(),
-      fsa_Cross = new Vec3();
 
-    const faceANormalWS3 = fsa_faceANormalWS3,
-      Worldnormal1 = fsa_Worldnormal1,
-      deltaC = fsa_deltaC,
-      worldEdge0 = fsa_worldEdge0,
-      worldEdge1 = fsa_worldEdge1,
-      Cross = fsa_Cross;
+    const faceANormalWS3 = this.fsa_faceANormalWS3,
+      Worldnormal1 = this.fsa_Worldnormal1,
+      deltaC = this.fsa_deltaC,
+      worldEdge0 = this.fsa_worldEdge0,
+      worldEdge1 = this.fsa_worldEdge1,
+      Cross = this.fsa_Cross;
 
     let dmin = Number.MAX_VALUE;
     const hullA = this;
@@ -303,8 +306,8 @@ export class ConvexPolyhedron extends Shape {
         faceANormalWS3.copy(hullA.faceNormals[fi]);
         quatA.vmult(faceANormalWS3, faceANormalWS3);
 
-        const d = hullA.testSepAxis(faceANormalWS3, hullB, posA, quatA, posB, quatB);
-        if (d === false) {
+        const [b, d] = hullA.testSepAxis(faceANormalWS3, hullB, posA, quatA, posB, quatB);
+        if (b === false) {
           return false;
         }
 
@@ -322,8 +325,8 @@ export class ConvexPolyhedron extends Shape {
         // Get world axis
         quatA.vmult(hullA.uniqueAxes[i], faceANormalWS3);
 
-        const d = hullA.testSepAxis(faceANormalWS3, hullB, posA, quatA, posB, quatB);
-        if (d === false) {
+        const [b, d] = hullA.testSepAxis(faceANormalWS3, hullB, posA, quatA, posB, quatB);
+        if (b === false) {
           return false;
         }
 
@@ -345,8 +348,8 @@ export class ConvexPolyhedron extends Shape {
         Worldnormal1.copy(hullB.faceNormals[fi]);
         quatB.vmult(Worldnormal1, Worldnormal1);
         curPlaneTests++;
-        const d = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
-        if (d === false) {
+        const [b, d] = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
+        if (b === false) {
           return false;
         }
 
@@ -362,8 +365,8 @@ export class ConvexPolyhedron extends Shape {
         quatB.vmult(hullB.uniqueAxes[i], Worldnormal1);
 
         curPlaneTests++;
-        const d = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
-        if (d === false) {
+        const [b, d] = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
+        if (b === false) {
           return false;
         }
 
@@ -388,8 +391,8 @@ export class ConvexPolyhedron extends Shape {
 
         if (!Cross.almostZero()) {
           Cross.normalize();
-          const dist = hullA.testSepAxis(Cross, hullB, posA, quatA, posB, quatB);
-          if (dist === false) {
+          const [b, dist] = hullA.testSepAxis(Cross, hullB, posA, quatA, posB, quatB);
+          if (b === false) {
             return false;
           }
           if (dist < dmin) {
@@ -419,7 +422,7 @@ export class ConvexPolyhedron extends Shape {
    * @param {Quaternion} quatB
    * @return {number} The overlap depth, or FALSE if no penetration.
    */
-  testSepAxis(axis: Vec3, hullB: ConvexPolyhedron, posA: Vec3, quatA: Quaternion, posB: Vec3, quatB: Quaternion): number | boolean {
+  testSepAxis(axis: Vec3, hullB: ConvexPolyhedron, posA: Vec3, quatA: Quaternion, posB: Vec3, quatB: Quaternion): [boolean, number] {
     // TODO: fix the return type
     const maxminA: number[] = [];
     const maxminB: number[] = [];
@@ -432,12 +435,12 @@ export class ConvexPolyhedron extends Shape {
     const maxB = maxminB[0];
     const minB = maxminB[1];
     if (maxA < minB || maxB < minA) {
-      return false; // Separated
+      return [false, 0]; // Separated
     }
     const d0 = maxA - minB;
     const d1 = maxB - minA;
     const depth = d0 < d1 ? d0 : d1;
-    return depth;
+    return [true, depth];
   }
 
   cli_aabbmin = new Vec3();
@@ -477,6 +480,15 @@ export class ConvexPolyhedron extends Shape {
     return c;
   }
 
+  private cfah_faceANormalWS = new Vec3();
+  private cfah_edge0 = new Vec3();
+  private cfah_WorldEdge0 = new Vec3();
+  private cfah_worldPlaneAnormal1 = new Vec3();
+  private cfah_planeNormalWS1 = new Vec3();
+  private cfah_worldA1 = new Vec3();
+  private cfah_localPlaneNormal = new Vec3();
+  private cfah_planeNormalWS = new Vec3();
+
   /**
    * Clip a face against a hull.
    * @method clipFaceAgainstHull
@@ -492,23 +504,15 @@ export class ConvexPolyhedron extends Shape {
   clipFaceAgainstHull(separatingNormal: Vec3, posA: Vec3, quatA: Quaternion,
     worldVertsB1: Vec3[], minDist: number, maxDist: number, result: HullResult[]) {
     // TODO: this method is a dumpster fire
-    const cfah_faceANormalWS = new Vec3(),
-      cfah_edge0 = new Vec3(),
-      cfah_WorldEdge0 = new Vec3(),
-      cfah_worldPlaneAnormal1 = new Vec3(),
-      cfah_planeNormalWS1 = new Vec3(),
-      cfah_worldA1 = new Vec3(),
-      cfah_localPlaneNormal = new Vec3(),
-      cfah_planeNormalWS = new Vec3();
 
-    const faceANormalWS = cfah_faceANormalWS,
-      edge0 = cfah_edge0,
-      WorldEdge0 = cfah_WorldEdge0,
-      worldPlaneAnormal1 = cfah_worldPlaneAnormal1,
-      planeNormalWS1 = cfah_planeNormalWS1,
-      worldA1 = cfah_worldA1,
-      localPlaneNormal = cfah_localPlaneNormal,
-      planeNormalWS = cfah_planeNormalWS;
+    const faceANormalWS = this.cfah_faceANormalWS,
+      edge0 = this.cfah_edge0,
+      WorldEdge0 = this.cfah_WorldEdge0,
+      worldPlaneAnormal1 = this.cfah_worldPlaneAnormal1,
+      planeNormalWS1 = this.cfah_planeNormalWS1,
+      worldA1 = this.cfah_worldA1,
+      localPlaneNormal = this.cfah_localPlaneNormal,
+      planeNormalWS = this.cfah_planeNormalWS;
 
     const hullA = this;
     const worldVertsB2: Vec3[] = [];

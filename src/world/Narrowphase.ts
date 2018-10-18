@@ -51,7 +51,7 @@ export class Narrowphase {
     this.v3pool = new Vec3Pool();
 
     this.world = world;
-    this.currentContactMaterial = null;
+    this.currentContactMaterial = world.defaultContactMaterial; // null;
 
     /**
      * @property {Boolean} enableFrictionReduction
@@ -1490,17 +1490,18 @@ export class Narrowphase {
     faceListA?: any[], faceListB?: any[]): boolean {
     const sepAxis = this.convexConvex_sepAxis;
 
-    if (xi.distanceTo(xj) > si.boundingSphereRadius + sj.boundingSphereRadius) {
+    if (xi.distanceTo(xj) > (si.boundingSphereRadius + sj.boundingSphereRadius)) {
       return false;
     }
 
     const cpsi = <ConvexPolyhedron>si;
+    let numContacts = 0;
     if (cpsi.findSeparatingAxis(<ConvexPolyhedron>sj, xi, qi, xj, qj, sepAxis, faceListA, faceListB)) {
       const res: HullResult[] = [];
       const q = this.convexConvex_q;
 
       cpsi.clipAgainstHull(xi, qi, <ConvexPolyhedron>sj, xj, qj, sepAxis, -100, 100, res);
-      let numContacts = 0;
+
       for (let j = 0; j !== res.length; j++) {
         if (justTest) {
           return true;
@@ -1534,7 +1535,7 @@ export class Narrowphase {
         this.createFrictionFromAverage(numContacts);
       }
     }
-    return false;
+    return numContacts > 0;
   }
 
   /**

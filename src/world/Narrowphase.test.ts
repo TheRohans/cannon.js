@@ -5,7 +5,9 @@ import { Body } from '../objects/Body';
 import { ContactMaterial } from '../material/ContactMaterial';
 import { Vec3 } from '../math/Vec3';
 import { Quaternion } from '../math/Quaternion';
-import { HullResult } from 'shapes/ConvexPolyhedron';
+import { HullResult, ConvexPolyhedron } from '../shapes/ConvexPolyhedron';
+import { mockCube } from '../main.test';
+
 
 describe('Narrowphase', () => {
 
@@ -50,6 +52,68 @@ describe('Narrowphase', () => {
 
     expect(result.length).toEqual(1);
   });
+
+  it('should return false if convexConvex does not touch', () => {
+    const mc = mockCube();
+
+    const world = new World();
+    const np = new Narrowphase(world);
+
+    const s1 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
+    const s2 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
+
+    const b1 = new Body({ mass: 1 });
+    b1.addShape(s1);
+    b1.position = new Vec3(0, 1.5, 0);
+
+    const b2 = new Body({ mass: 1 });
+    b2.addShape(s2);
+    b2.position = new Vec3(0, 0, 0);
+
+    const actual = np.convexConvex(
+      s1, s2,
+      b1.position, b2.position,
+      new Quaternion(), new Quaternion(),
+      b1, b2,
+      undefined, undefined,
+      false
+    );
+
+    expect(actual).toEqual(false);
+    expect(np.result.length).toEqual(0);
+  });
+
+  it('should return true if convexConvex does touch', () => {
+    const mc = mockCube();
+    const mc2 = mockCube();
+
+    const world = new World();
+    const np = new Narrowphase(world);
+
+    const s1 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
+    const s2 = new ConvexPolyhedron(mc2[0], mc2[2], undefined, mc2[1]);
+
+    const b1 = new Body({ mass: 1 });
+    b1.addShape(s1);
+    b1.position = new Vec3(0.5, 0, 0);
+
+    const b2 = new Body({ mass: 1 });
+    b2.addShape(s2);
+    b2.position = new Vec3(-0.5, 0, 0);
+
+    const actual = np.convexConvex(
+      s1, s2,
+      b1.position, b2.position,
+      new Quaternion(), new Quaternion(),
+      b1, b2,
+      undefined, undefined,
+      false
+    );
+
+    expect(actual).toEqual(true);
+    expect(np.result.length).toEqual(4);
+  });
+
 
   // it('should sphereHeightfield', () => {
   //   const world = new World();

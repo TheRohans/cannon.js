@@ -12,7 +12,7 @@ I am porting this to Typescript so I can use it within my own game engine (which
 
 ## Using the library
 
-If you want to use the library or to contribute, you can either reference this repo directly from within your webpack config:
+If you want to use the library, you can either reference this repo directly from within your webpack config:
 
     ...
     "dependencies": {
@@ -31,6 +31,14 @@ Or clone the repo and reference it from the local file system:
       ...
     },
     ...
+
+## Contributing
+
+1. Clone this repository
+2. Install [node.js](https://nodejs.org/en/)
+3. Run ```npm install``` to install all of the dependencies
+4. Run ```npm run build``` to build DaPao
+
 
 ## Example
 

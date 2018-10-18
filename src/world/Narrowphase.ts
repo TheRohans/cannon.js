@@ -304,68 +304,68 @@ export class Narrowphase {
             case (Shape.types.CONVEXPOLYHEDRON | Shape.types.CONVEXPOLYHEDRON):
               retval = (aFirst)
                 ? this.convexConvex(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.convexConvex(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.convexConvex(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.CONVEXPOLYHEDRON | Shape.types.PARTICLE):
               retval = (aFirst)
                 ? this.convexParticle(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.convexParticle(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.convexParticle(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.BOX | Shape.types.CONVEXPOLYHEDRON):
               retval = (aFirst)
                 ? this.boxConvex(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.boxConvex(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.boxConvex(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.SPHERE | Shape.types.CONVEXPOLYHEDRON):
               retval = (aFirst)
                 ? this.sphereConvex(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.sphereConvex(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.sphereConvex(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.BOX | Shape.types.BOX):
               retval = (aFirst)
                 ? this.boxBox(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.boxBox(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.boxBox(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.BOX | Shape.types.PARTICLE):
               retval = (aFirst)
                 ? this.boxParticle(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.boxParticle(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.boxParticle(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.SPHERE | Shape.types.BOX):
               retval = (aFirst)
                 ? this.sphereBox(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.sphereBox(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.sphereBox(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.SPHERE | Shape.types.SPHERE):
               retval = (aFirst)
                 ? this.sphereSphere(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.sphereSphere(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.sphereSphere(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.SPHERE | Shape.types.PLANE):
               retval = (aFirst)
                 ? this.spherePlane(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.spherePlane(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.spherePlane(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
 
             case (Shape.types.SPHERE | Shape.types.PARTICLE):
               retval = (aFirst)
                 ? this.sphereParticle(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.sphereParticle(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.sphereParticle(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.PLANE | Shape.types.BOX):
               retval = (aFirst)
                 ? this.planeBox(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.planeBox(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.planeBox(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.PLANE | Shape.types.CONVEXPOLYHEDRON):
               retval = (aFirst)
                 ? this.planeConvex(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.planeConvex(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.planeConvex(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
             case (Shape.types.PLANE | Shape.types.PARTICLE):
               retval = (aFirst)
                 ? this.planeParticle(si, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
-                : this.planeParticle(sj, si, xj, xi, qj, qi, bj, bi, sj, si, justTest);
+                : this.planeParticle(sj, si, xj, xi, qj, qi, bj, bi, si, sj, justTest);
               break;
           }
 
@@ -1495,15 +1495,14 @@ export class Narrowphase {
     }
 
     const cpsi = <ConvexPolyhedron>si;
-    if (cpsi.findSeparatingAxis(cpsi, xi, qi, xj, qj, sepAxis, faceListA, faceListB)) {
+    if (cpsi.findSeparatingAxis(<ConvexPolyhedron>sj, xi, qi, xj, qj, sepAxis, faceListA, faceListB)) {
       const res: HullResult[] = [];
       const q = this.convexConvex_q;
 
-      cpsi.clipAgainstHull(xi, qi, cpsi, xj, qj, sepAxis, -100, 100, res);
+      cpsi.clipAgainstHull(xi, qi, <ConvexPolyhedron>sj, xj, qj, sepAxis, -100, 100, res);
       let numContacts = 0;
       for (let j = 0; j !== res.length; j++) {
         if (justTest) {
-          // TODO: what?
           return true;
         }
         const r = this.createContactEquation(bi, bj, si, sj, rsi, rsj),

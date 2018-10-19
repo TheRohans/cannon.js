@@ -18,12 +18,9 @@
   ],
   "scripts": {
     "install:deps": "npm install --no-optional",
-    "test": "NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --reporters=spec",
-    "test:full": "NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --code-coverage --reporters=spec,kjhtml,karma-remap-istanbul",
-    "build": "NODE_ENV=production node node_modules/.bin/webpack --display-error-details --progress -p",
-    "test-win": "cross-env NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --reporters=spec",
-    "test:full-win": "cross-env NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --code-coverage --reporters=spec,kjhtml,karma-remap-istanbul",
-    "build-win": "cross-env NODE_ENV=production node_modules/.bin/webpack --display-error-details --progress -p",
+    "test": "cross-env NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --reporters=spec",
+    "test:full": "cross-env NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --code-coverage --reporters=spec,kjhtml,karma-remap-istanbul",
+    "build": "cross-env NODE_ENV=production node_modules/.bin/webpack --display-error-details --progress -p",
     "lint": "tslint --config tslint.json --project ."
   },
   "main": "./lib/dapao.js",

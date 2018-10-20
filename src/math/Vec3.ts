@@ -45,7 +45,10 @@ export class Vec3 {
    * @return {Vec3}
    */
   cross(v: Vec3, target?: Vec3): Vec3 {
-    const vx = v.x, vy = v.y, vz = v.z, x = this.x, y = this.y, z = this.z;
+    const vx = v.x,
+          vy = v.y,
+          vz = v.z,
+          x = this.x, y = this.y, z = this.z;
     target = target || new Vec3();
 
     target.x = (y * vz) - (z * vy);
@@ -105,7 +108,7 @@ export class Vec3 {
    * @param {Vec3} target Optional. Target to save in.
    * @return {Vec3}
    */
-  vsub(v: Vec3, target: Vec3): Vec3 {
+  vsub(v: Vec3, target?: Vec3): Vec3 {
     if (target) {
       target.x = this.x - v.x;
       target.y = this.y - v.y;
@@ -144,7 +147,6 @@ export class Vec3 {
       this.y *= invN;
       this.z *= invN;
     } else {
-      // Make something up
       this.x = 0;
       this.y = 0;
       this.z = 0;
@@ -247,7 +249,7 @@ export class Vec3 {
    * @return {Vec3}
    * @deprecated Use .scale() instead
    */
-  mult(scalar: number, target: Vec3) {
+  mult(scalar: number, target?: Vec3): Vec3 {
     target = target || new Vec3();
     const x = this.x,
       y = this.y,
@@ -280,7 +282,7 @@ export class Vec3 {
    * @param {Vec3} target
    * @return {Vec3}
    */
-  scale(scalar: number, target: Vec3): Vec3 {
+  scale(scalar: number, target?: Vec3): Vec3 {
     return this.mult(scalar, target);
   }
 
@@ -324,7 +326,7 @@ export class Vec3 {
    * @param {Vec3} target Optional target to save in
    * @return {Vec3}
    */
-  negate(target: Vec3): Vec3 {
+  negate(target?: Vec3): Vec3 {
     target = target || new Vec3();
     target.x = -this.x;
     target.y = -this.y;

@@ -13,9 +13,6 @@ export declare class Quaternion {
     private sfv_t1;
     private sfv_t2;
     setFromVectors(u: Vec3, v: Vec3): this;
-    private Quaternion_mult_va;
-    private Quaternion_mult_vb;
-    private Quaternion_mult_vaxvb;
     mult(q: Quaternion, target: Quaternion): Quaternion;
     inverse(target: Quaternion): Quaternion;
     conjugate(target?: Quaternion): Quaternion;

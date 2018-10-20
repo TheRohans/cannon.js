@@ -1,6 +1,9 @@
 import { Vec3 } from './math/Vec3';
 import { Box } from './shapes/Box';
 
+// Create a companion cube based on triangles. The basis of this is the
+// default cube exported from blender in the OBJ format. The other mocks
+// are based around quads
 export const mockCube = (): [Vec3[], Vec3[], number[][]] => {
   const vertices = [
     new Vec3(-1.000000, -1.000000, 1.000000),
@@ -41,10 +44,10 @@ export const mockCube = (): [Vec3[], Vec3[], number[][]] => {
 
   vn.forEach( f => {
     verts.push(vertices[f[0] - 1]);
-    norms.push(normals[f[1] - 1]);
+    norms.push(normals[f[1] - 1].negate());
   });
 
-  for (let z = 0; z < (vn.length / 3); z++) {
+  for (let z = 0; z < vn.length; z += 3) {
     const f = [
       vn[z][0],
       vn[z + 1][0],

@@ -65,11 +65,11 @@ export class Box extends Shape {
       [1, 2, 6, 5], // +x
     ];
 
-    const axes = [
-      new V(0, 0, 1),
-      new V(0, 1, 0),
-      new V(1, 0, 0)
-    ];
+    // const axes = [
+    //   new V(0, 0, 1),
+    //   new V(0, 1, 0),
+    //   new V(1, 0, 0)
+    // ];
 
     const h = new ConvexPolyhedron(vertices, indices);
     this.convexPolyhedronRepresentation = h;

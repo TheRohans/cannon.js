@@ -19,8 +19,8 @@ export declare class ConvexPolyhedron extends Shape {
     constructor(points: Vec3[], faces: number[][], uniqueAxes?: Vec3[], faceNormals?: Vec3[]);
     computeEdges(): void;
     computeNormals(): void;
-    static computeNormal(va: Vec3, vb: Vec3, vc: Vec3, target: Vec3): void;
-    getFaceNormal(i: number, target: Vec3): void;
+    static computeNormal(va: Vec3, vb: Vec3, vc: Vec3, target?: Vec3): void;
+    getFaceNormal(i: number, target?: Vec3): Vec3;
     private cah_WorldNormal;
     clipAgainstHull(posA: Vec3, quatA: Quaternion, hullB: ConvexPolyhedron, posB: Vec3, quatB: Quaternion, separatingNormal: Vec3, minDist: number, maxDist: number, result: HullResult[]): void;
     private fsa_faceANormalWS3;
@@ -51,8 +51,11 @@ export declare class ConvexPolyhedron extends Shape {
     updateBoundingSphereRadius(): void;
     calculateWorldAABB(pos: Vec3, quat: Quaternion, min: Vec3, max: Vec3): void;
     volume(): number;
-    getAveragePointLocal(target: Vec3): Vec3;
+    getAveragePointLocal(target?: Vec3): Vec3;
     transformAllPoints(offset: Vec3, quat: Quaternion): void;
-    pointIsInside(p: Vec3): boolean | number;
+    private ConvexPolyhedron_pointIsInside;
+    private ConvexPolyhedron_vToP;
+    private ConvexPolyhedron_vToPointInside;
+    pointIsInside(p: Vec3): boolean;
     static project(hull: ConvexPolyhedron, axis: Vec3, pos: Vec3, quat: Quaternion, result: number[]): void;
 }

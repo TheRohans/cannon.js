@@ -1500,7 +1500,12 @@ export class Narrowphase {
       const res: HullResult[] = [];
       const q = this.convexConvex_q;
 
+      console.error(xi, xj);
+      console.error(qi, qj);
+
       cpsi.clipAgainstHull(xi, qi, <ConvexPolyhedron>sj, xj, qj, sepAxis, -100, 100, res);
+
+      console.error(sepAxis, res.length);
 
       for (let j = 0; j !== res.length; j++) {
         if (justTest) {

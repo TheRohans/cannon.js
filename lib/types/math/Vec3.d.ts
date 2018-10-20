@@ -8,7 +8,7 @@ export declare class Vec3 {
     set(x: number, y: number, z: number): this;
     setZero(): void;
     vadd(v: Vec3, target?: Vec3): Vec3;
-    vsub(v: Vec3, target: Vec3): Vec3;
+    vsub(v: Vec3, target?: Vec3): Vec3;
     crossmat(): Mat3;
     normalize(): number;
     unit(target: Vec3): Vec3;
@@ -17,13 +17,13 @@ export declare class Vec3 {
     norm2(): number;
     distanceTo(p: Vec3): number;
     distanceSquared(p: Vec3): number;
-    mult(scalar: number, target: Vec3): Vec3;
+    mult(scalar: number, target?: Vec3): Vec3;
     vmul(vector: Vec3, target: Vec3): Vec3;
-    scale(scalar: number, target: Vec3): Vec3;
+    scale(scalar: number, target?: Vec3): Vec3;
     addScaledVector(scalar: number, vector: Vec3, target: Vec3): Vec3;
     dot(v: Vec3): number;
     isZero(): boolean;
-    negate(target: Vec3): Vec3;
+    negate(target?: Vec3): Vec3;
     tangents(t1: Vec3, t2: Vec3): void;
     toString(): string;
     toArray(): number[];

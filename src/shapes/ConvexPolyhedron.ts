@@ -36,6 +36,7 @@ export class ConvexPolyhedron extends Shape {
   worldVerticesNeedsUpdate: boolean;
 
   faces: number[][];
+  // Facenormals aka Surface normals - not to be confused with vector normals
   faceNormals: Vec3[];
   worldFaceNormalsNeedsUpdate: boolean;
   worldFaceNormals: Vec3[];
@@ -136,11 +137,10 @@ export class ConvexPolyhedron extends Shape {
    */
   computeNormals(): void {
     if (!this.faceNormals.length) {
-      this.faceNormals.length = this.faces.length;
+      this.faceNormals = new Array<Vec3>(this.faces.length);
 
       // Generate normals
       for (let i = 0; i < this.faces.length; i++) {
-
         // Check so all vertices exists for this face
         for (let j = 0; j < this.faces[i].length; j++) {
           if (!this.vertices[this.faces[i][j]]) {
@@ -150,7 +150,6 @@ export class ConvexPolyhedron extends Shape {
 
         const n = this.faceNormals[i] || new Vec3();
         this.getFaceNormal(i, n);
-        // n.negate(n);
         this.faceNormals[i] = n;
 
         // TODO: If you pass in normals that render correctly and seem to be in CCW order
@@ -207,6 +206,7 @@ export class ConvexPolyhedron extends Shape {
 
   /**
    * Compute the normal of a face from its vertices
+   *
    * @method getFaceNormal
    * @param  {Number} i
    * @param  {Vec3} target
@@ -239,36 +239,35 @@ export class ConvexPolyhedron extends Shape {
     quatB: Quaternion, separatingNormal: Vec3, minDist: number, maxDist: number, result: HullResult[]) {
 
     const WorldNormal = this.cah_WorldNormal;
-    const hullA = this;
-    const curMaxDist = maxDist;
-    let closestFaceB = -1;
+    let closestFaceB: number[] = [];
     let dmax = -Number.MAX_VALUE;
-    console.error(hullB.faces.length);
+
     for (let face = 0; face < hullB.faces.length; face++) {
       WorldNormal.copy(hullB.faceNormals[face]);
       quatB.vmult(WorldNormal, WorldNormal);
-      // posB.vadd(WorldNormal,WorldNormal);
       const d = WorldNormal.dot(separatingNormal);
-      console.error(d);
       if (d > dmax) {
         dmax = d;
-        closestFaceB = face;
+        closestFaceB = [face];
+      } else if (d === dmax) {
+        closestFaceB.push(face);
       }
     }
 
-    const worldVertsB1 = [];
-    const polyB = hullB.faces[closestFaceB];
-    const numVertices = polyB.length;
-    for (let e0 = 0; e0 < numVertices; e0++) {
-      const b = hullB.vertices[polyB[e0]];
-      const worldb = new Vec3();
-      worldb.copy(b);
-      quatB.vmult(worldb, worldb);
-      posB.vadd(worldb, worldb);
-      worldVertsB1.push(worldb);
-    }
+    closestFaceB.forEach( fb => {
+      const worldVertsB1: Vec3[] = [];
+      const polyB = hullB.faces[fb];
+      const numVertices = polyB.length;
 
-    if (closestFaceB >= 0) {
+      for (let e0 = 0; e0 < numVertices; e0++) {
+        const b = hullB.vertices[polyB[e0]];
+        const worldb = new Vec3();
+        worldb.copy(b);
+        quatB.vmult(worldb, worldb);
+        posB.vadd(worldb, worldb);
+        worldVertsB1.push(worldb);
+      }
+
       this.clipFaceAgainstHull(separatingNormal,
         posA,
         quatA,
@@ -276,7 +275,7 @@ export class ConvexPolyhedron extends Shape {
         minDist,
         maxDist,
         result);
-    }
+    });
   }
 
   private fsa_faceANormalWS3 = new Vec3();
@@ -328,7 +327,7 @@ export class ConvexPolyhedron extends Shape {
         }
 
         if (d < dmin) {
-          dmin = <number>d;
+          dmin = d;
           target.copy(faceANormalWS3);
         }
       }
@@ -407,7 +406,7 @@ export class ConvexPolyhedron extends Shape {
             return false;
           }
           if (dist < dmin) {
-            dmin = <number>dist;
+            dmin = dist;
             target.copy(Cross);
           }
         }
@@ -434,7 +433,6 @@ export class ConvexPolyhedron extends Shape {
    * @return {number} The overlap depth, or FALSE if no penetration.
    */
   testSepAxis(axis: Vec3, hullB: ConvexPolyhedron, posA: Vec3, quatA: Quaternion, posB: Vec3, quatB: Quaternion): [boolean, number] {
-    // TODO: fix the return type
     const maxminA: number[] = [];
     const maxminB: number[] = [];
 
@@ -528,6 +526,7 @@ export class ConvexPolyhedron extends Shape {
     const worldVertsB2: Vec3[] = [];
     const pVtxIn = worldVertsB1;
     const pVtxOut = worldVertsB2;
+
     // Find the face with normal closest to the separating axis
     let closestFaceA = -1;
     let dmin = Number.MAX_VALUE;

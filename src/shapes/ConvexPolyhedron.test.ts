@@ -20,6 +20,21 @@ describe('ConvexPolyhedron', () => {
     expect(max.y).toEqual(1);
   });
 
+  it('should calculate surface normals given a cube (quad)', () => {
+    const hullA = mockBoxHull(1);
+    hullA.faceNormals.forEach( fn => {
+      expect(fn.length()).toEqual(1);
+    });
+  });
+
+  it('should calculate surface normals given a cube (tri)', () => {
+    const mc = mockCube();
+    const cp = new ConvexPolyhedron(mc[0], mc[2]);
+    cp.faceNormals.forEach( fn => {
+      expect(fn.length()).toEqual(1);
+    });
+  });
+
   it('should clipFaceAgainstPlane', () => {
     const h = mockBoxHull();
 
@@ -187,8 +202,8 @@ describe('ConvexPolyhedron', () => {
   it('should clipAgainstHull Y (tri)', () => {
     const mc = mockCube();
     const mc2 = mockCube();
-    const si = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
-    const sj = new ConvexPolyhedron(mc2[0], mc2[2], undefined, mc2[1]);
+    const si = new ConvexPolyhedron(mc[0], mc[2]);
+    const sj = new ConvexPolyhedron(mc2[0], mc2[2]);
 
     // const pb1 = mockPolyBox(1, 1, 1);
     // const pb2 = mockPolyBox(1, 1, 1);
@@ -366,7 +381,7 @@ describe('ConvexPolyhedron', () => {
 
   it('should return true for pointInside (tri)', () => {
     const mc = mockCube();
-    const poly = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
+    const poly = new ConvexPolyhedron(mc[0], mc[2]);
     const actual = poly.pointIsInside(new Vec3(0.2, 0.3, 0.2));
     expect(actual).toEqual(true);
   });
@@ -379,7 +394,7 @@ describe('ConvexPolyhedron', () => {
 
   it('should return false for pointInside (tri)', () => {
     const mc = mockCube();
-    const poly = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
+    const poly = new ConvexPolyhedron(mc[0], mc[2]);
     const actual = poly.pointIsInside(new Vec3(1.5, 1.5, 1.5));
     expect(actual).toEqual(false);
   });

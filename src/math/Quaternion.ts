@@ -144,10 +144,6 @@ export class Quaternion {
     return this;
   }
 
-  // private Quaternion_mult_va = new Vec3();
-  // private Quaternion_mult_vb = new Vec3();
-  // private Quaternion_mult_vaxvb = new Vec3();
-
   /**
    * Quaternion multiplication
    * @method mult

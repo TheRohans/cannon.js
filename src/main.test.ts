@@ -38,24 +38,17 @@ export const mockCube = (): [Vec3[], Vec3[], number[][]] => {
     [4, 6], [2, 6], [6, 6],
   ];
 
-  const verts: Vec3[] = [];
-  const norms: Vec3[] = [];
   const faces: number[][] = [];
-
-  vn.forEach( f => {
-    verts.push(vertices[f[0] - 1]);
-    norms.push(normals[f[1] - 1].negate());
-  });
 
   for (let z = 0; z < vn.length; z += 3) {
     const f = [
-      vn[z][0],
-      vn[z + 1][0],
-      vn[z + 2][0],
+      vn[z][0] - 1,
+      vn[z + 1][0] - 1,
+      vn[z + 2][0] - 1,
     ];
     faces.push(f);
   }
-  return [verts, norms, faces];
+  return [vertices, normals, faces];
 };
 
 export const mockBoxHull = (size: number = 0.5) => {

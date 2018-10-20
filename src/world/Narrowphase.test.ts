@@ -53,14 +53,14 @@ describe('Narrowphase', () => {
     expect(result.length).toEqual(1);
   });
 
-  it('should return false if convexConvex does not touch', () => {
+  it('should return false if convexConvex does not touch (tri)', () => {
     const mc = mockCube();
 
     const world = new World();
     const np = new Narrowphase(world);
 
-    const s1 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
-    const s2 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
+    const s1 = new ConvexPolyhedron(mc[0], mc[2]);
+    const s2 = new ConvexPolyhedron(mc[0], mc[2]);
 
     const b1 = new Body({ mass: 1 });
     b1.addShape(s1);
@@ -68,7 +68,7 @@ describe('Narrowphase', () => {
 
     const b2 = new Body({ mass: 1 });
     b2.addShape(s2);
-    b2.position = new Vec3(0, 0, 0);
+    b2.position = new Vec3(0, -1.5, 0);
 
     const actual = np.convexConvex(
       s1, s2,
@@ -118,8 +118,8 @@ describe('Narrowphase', () => {
     const world = new World();
     const np = new Narrowphase(world);
 
-    const s1 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
-    const s2 = new ConvexPolyhedron(mc2[0], mc2[2], undefined, mc2[1]);
+    const s1 = new ConvexPolyhedron(mc[0], mc[2]);
+    const s2 = new ConvexPolyhedron(mc2[0], mc2[2]);
 
     const b1 = new Body({ mass: 1 });
     b1.addShape(s1);
@@ -139,7 +139,7 @@ describe('Narrowphase', () => {
     );
 
     expect(actual).toEqual(true);
-    expect(np.result.length).toEqual(4);
+    expect(np.result.length).toEqual(8);
   });
 
   it('should return true if convexConvex does touch Y (quad)', () => {
@@ -177,8 +177,8 @@ describe('Narrowphase', () => {
     const world = new World();
     const np = new Narrowphase(world);
 
-    const s1 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
-    const s2 = new ConvexPolyhedron(mc2[0], mc2[2], undefined, mc2[1]);
+    const s1 = new ConvexPolyhedron(mc[0], mc[2]);
+    const s2 = new ConvexPolyhedron(mc2[0], mc2[2]);
 
     const b1 = new Body({ mass: 1 });
     b1.addShape(s1);
@@ -198,7 +198,7 @@ describe('Narrowphase', () => {
     );
 
     expect(actual).toEqual(true);
-    expect(np.result.length).toEqual(4);
+    expect(np.result.length).toEqual(8);
   });
 
   it('should return true if convexConvex does touch Z (quad)', () => {
@@ -236,8 +236,8 @@ describe('Narrowphase', () => {
     const world = new World();
     const np = new Narrowphase(world);
 
-    const s1 = new ConvexPolyhedron(mc[0], mc[2], undefined, mc[1]);
-    const s2 = new ConvexPolyhedron(mc2[0], mc2[2], undefined, mc2[1]);
+    const s1 = new ConvexPolyhedron(mc[0], mc[2]);
+    const s2 = new ConvexPolyhedron(mc2[0], mc2[2]);
 
     const b1 = new Body({ mass: 1 });
     b1.addShape(s1);
@@ -257,9 +257,8 @@ describe('Narrowphase', () => {
     );
 
     expect(actual).toEqual(true);
-    expect(np.result.length).toEqual(4);
+    expect(np.result.length).toEqual(8);
   });
-
 
   // it('should sphereHeightfield', () => {
   //   const world = new World();

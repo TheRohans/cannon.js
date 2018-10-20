@@ -24,8 +24,8 @@ import { FrictionEquation } from '../equations/FrictionEquation';
 export class Narrowphase {
   contactPointPool: any[];
   frictionEquationPool: FrictionEquation[];
-  result: any[];
-  frictionResult: any[];
+  result: ContactEquation[];
+  frictionResult: FrictionEquation[];
 
   v3pool: Vec3Pool;
   world: World;
@@ -70,7 +70,7 @@ export class Narrowphase {
    * @param {Shape} overrideShapeB
    * @return {ContactEquation}
    */
-  createContactEquation(bi: Body, bj: Body, si: Shape, sj: Shape, overrideShapeA: Shape, overrideShapeB: Shape) {
+  createContactEquation(bi: Body, bj: Body, si: Shape, sj: Shape, overrideShapeA: Shape, overrideShapeB: Shape): ContactEquation {
     let c;
     if (this.contactPointPool.length) {
       c = this.contactPointPool.pop();
@@ -104,7 +104,7 @@ export class Narrowphase {
     return c;
   }
 
-  createFrictionEquationsFromContact(contactEquation: FrictionEquation, outArray: any[]) {
+  createFrictionEquationsFromContact(contactEquation: ContactEquation, outArray: FrictionEquation[]): boolean {
     const bodyA = contactEquation.bi;
     const bodyB = contactEquation.bj;
     const shapeA = contactEquation.si;
@@ -185,7 +185,7 @@ export class Narrowphase {
     const bodyB = c.bj;
     for (let i = 0; i !== numContacts; i++) {
       c = this.result[this.result.length - 1 - i];
-      if (c.bodyA !== bodyA) {
+      if (c.bi !== bodyA) {
         this.averageNormal.vadd(c.ni, this.averageNormal);
         this.averageContactPointA.vadd(c.ri, this.averageContactPointA);
         this.averageContactPointB.vadd(c.rj, this.averageContactPointB);

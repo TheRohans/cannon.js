@@ -32,11 +32,6 @@ export declare class Equation {
     private tmp;
     computeGiMGt(): number;
     private addToWlambda_temp;
-    private addToWlambda_Gi;
-    private addToWlambda_Gj;
-    private addToWlambda_ri;
-    private addToWlambda_rj;
-    private addToWlambda_Mdiag;
     addToWlambda(deltalambda: number): void;
     computeC(): number;
 }

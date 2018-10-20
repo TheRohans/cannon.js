@@ -237,11 +237,11 @@ export class Equation {
   }
 
   private addToWlambda_temp = new Vec3();
-  private addToWlambda_Gi = new Vec3();
-  private addToWlambda_Gj = new Vec3();
-  private addToWlambda_ri = new Vec3();
-  private addToWlambda_rj = new Vec3();
-  private addToWlambda_Mdiag = new Vec3();
+  // private addToWlambda_Gi = new Vec3();
+  // private addToWlambda_Gj = new Vec3();
+  // private addToWlambda_ri = new Vec3();
+  // private addToWlambda_rj = new Vec3();
+  // private addToWlambda_Mdiag = new Vec3();
 
   /**
    * Add constraint velocity to the bodies.

@@ -7,9 +7,11 @@ import { Vec3 } from '../math/Vec3';
 import { Quaternion } from '../math/Quaternion';
 import { HullResult, ConvexPolyhedron } from '../shapes/ConvexPolyhedron';
 import { mockCube, mockBoxHull } from '../main.test';
+import { ContactEquation } from 'equations/ContactEquation';
 
 
 describe('Narrowphase', () => {
+  let cm: ContactMaterial;
 
   // const createHeightfield = () => {
   //   const matrix = [];
@@ -25,11 +27,16 @@ describe('Narrowphase', () => {
   //   });
   //   return hfShape;
   // };
+  beforeEach( () => {
+    cm = new ContactMaterial();
+    cm.friction = 0;
+    cm.restitution = 0;
+  });
 
   it('should sphereSphere', () => {
     const world = new World();
     const cg = new Narrowphase(world);
-    const result: HullResult[] = [];
+    const result: ContactEquation[] = [];
     const sphereShape = new Sphere(1);
 
     const bodyA = new Body({ mass: 1 });

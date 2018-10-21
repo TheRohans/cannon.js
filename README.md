@@ -39,7 +39,6 @@ Or clone the repo and reference it from the local file system:
 3. Run ```npm install``` to install all of the dependencies
 4. Run ```npm run build``` to build DaPao
 
-
 ## Example
 
 For deeper examples, I recommend you checkout the cannon.js project ([cannon.js](https://github.com/schteppe/cannon.js)), but here is a very basic example:
@@ -97,11 +96,15 @@ var lastTime;
 
 |             | Sphere | Plane | Box | Convex | Particle | Heightfield | Trimesh |
 | :-----------|:------:|:-----:|:---:|:------:|:--------:|:-----------:|:-------:|
-| Sphere      | Yes    | Yes   | Yes | Yes    | Yes      | (todo)      | (todo)  |
-| Plane       | -      | -     | Yes | Yes    | Yes      | -           | (todo)  |
-| Box         | -      | -     | Yes | Yes    | Yes      | (todo)      | (todo)  |
-| Cylinder    | -      | -     | Yes | Yes    | Yes      | (todo)      | (todo)  |
-| Convex      | -      | -     | -   | Yes    | Yes      | (todo)      | (todo)  |
-| Particle    | -      | -     | -   | -      | -        | (todo)      | (todo)  |
-| Heightfield | -      | -     | -   | -      | -        | -           | (todo)  |
+| Sphere      | Yes    | Yes   | Yes | Yes    | NT       | TD          | TD      |
+| Plane       | -      | -     | Yes | Yes    | NT       | -           | TD      |
+| Box         | -      | -     | Yes | Yes    | NT       | TD          | TD      |
+| Cylinder    | -      | -     | NT  | NT     | NT       | TD          | TD      |
+| Convex      | -      | -     | -   | BU     | NT       | TD          | TD      |
+| Particle    | -      | -     | -   | -      | -        | TD          | TD      |
+| Heightfield | -      | -     | -   | -      | -        | -           | TD      |
 | Trimesh     | -      | -     | -   | -      | -        | -           | -       |
+
+* NT = Not tested, but code exists. Feedback welcome.
+* BU = Buggy
+* TD = Todo

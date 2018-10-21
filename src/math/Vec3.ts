@@ -210,7 +210,7 @@ export class Vec3 {
    * @method lengthSquared
    * @return {Number}
    */
-  // lengthSquared = () => this.norm2();
+  lengthSquared = () => this.norm2();
 
   /**
    * Get distance from this point to another point

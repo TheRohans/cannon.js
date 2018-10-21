@@ -19,6 +19,7 @@ const config = {
     path: path.join(__dirname, 'lib'),
     filename: '[name].js',
     chunkFilename: '[id].js',
+    library: 'DaPao',
     libraryTarget: 'umd',
     globalObject: 'this',
   },

@@ -9,7 +9,6 @@ export declare class SplitNode {
     visited: boolean;
 }
 export declare class SplitSolver extends Solver {
-    static STATIC: number;
     iterations: number;
     tolerance: number;
     subsolver: SplitSolver;

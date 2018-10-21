@@ -1,3 +1,9 @@
+export interface MaterialOptions {
+  name?: string;
+  friction?: number;
+  restitution?: number;
+}
+
 /**
  * Defines a physics material.
  * @class Material
@@ -13,20 +19,12 @@ export class Material {
   friction: number;
   restitution: number;
 
-  constructor(options: any = {}) {
+  constructor(options: MaterialOptions = <MaterialOptions>{}) {
     options = Object.assign({
       name: '',
       friction: -1,
       restitution: -1
     }, options);
-
-    // Backwards compatibility fix
-    // if (typeof (options) === 'string') {
-    //   name = options;
-    //   options = {};
-    // } else if (typeof (options) === 'object') {
-    //   name = '';
-    // }
 
     /**
      * @property name

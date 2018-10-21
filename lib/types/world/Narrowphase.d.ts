@@ -60,8 +60,6 @@ export declare class Narrowphase {
     private sphereConvex_penetrationVec;
     private sphereConvex_sphereToWorldPoint;
     sphereConvex(si: Shape, sj: Shape, xi: Vec3, xj: Vec3, qi: Quaternion, qj: Quaternion, bi: Body, bj: Body, rsi: Shape, rsj: Shape, justTest: boolean): boolean;
-    private planeBox_normal;
-    private plane_to_corner;
     planeBox(si: Shape, sj: Shape, xi: Vec3, xj: Vec3, qi: Quaternion, qj: Quaternion, bi: Body, bj: Body, rsi: Shape, rsj: Shape, justTest: boolean): boolean;
     private planeConvex_v;
     private planeConvex_normal;

@@ -261,14 +261,17 @@ export class World extends EventTarget {
      */
     this.contactMaterialTable = new TupleDictionary();
 
-    this.defaultMaterial = new Material('default');
+    this.defaultMaterial = new Material({ name: 'default'});
 
     /**
      * This contact material is used if no suitable contactmaterial is found for a contact.
      * @property defaultContactMaterial
      * @type {ContactMaterial}
      */
-    this.defaultContactMaterial = new ContactMaterial(this.defaultMaterial, this.defaultMaterial, { friction: 1, restitution: 0.0 });
+    this.defaultContactMaterial = new ContactMaterial(
+      this.defaultMaterial,
+      this.defaultMaterial,
+      { friction: 1, restitution: 0.0 });
 
     /**
      * @property doProfiling
@@ -337,9 +340,6 @@ export class World extends EventTarget {
     // }
   }
 
-  // Temp stuff
-  private tmpAABB1 = new AABB();
-  private tmpArray1: any[] = [];
   private tmpRay = new Ray();
   /**
    * Get the contact material between materials m1 and m2
@@ -348,8 +348,8 @@ export class World extends EventTarget {
    * @param {Material} m2
    * @return {ContactMaterial} The contact material if it was found.
    */
-  getContactMaterial(m1: Material, m2: Material) {
-    return this.contactMaterialTable.get(m1.id, m2.id); // this.contactmaterials[this.mats2cmat[i+j*this.materials.length]];
+  getContactMaterial(m1: Material, m2: Material): ContactMaterial {
+    return this.contactMaterialTable.get(m1.id, m2.id);
   }
 
   /**
@@ -586,8 +586,6 @@ export class World extends EventTarget {
     this.contactMaterialTable.set(cmat.materials[0].id, cmat.materials[1].id, cmat);
   }
 
-  // private step_tmp1 = new Vec3();
-
   /**
    * Step the physics world forward in time.
    *
@@ -643,6 +641,13 @@ export class World extends EventTarget {
     }
   }
 
+  private World_step_preStepEvent = { type: 'preStep' };
+  private World_step_collideEvent = <CollideEvent>{ type: Body.COLLIDE_EVENT_NAME, body: null, contact: null };
+  private World_step_oldContacts: any[] = []; // Pools for unused objects
+  private World_step_frictionEquationPool: any[] = [];
+  private World_step_p1: any[] = []; // Reusable arrays for collision pairs
+  private World_step_p2: any[] = [];
+
   /**
    * Dispatched after the world has stepped forward in time.
    * @event postStep
@@ -652,32 +657,10 @@ export class World extends EventTarget {
    * Dispatched before the world steps forward in time.
    * @event preStep
    */
-  private World_step_preStepEvent = { type: 'preStep' };
-  private World_step_collideEvent = <CollideEvent>{ type: Body.COLLIDE_EVENT_NAME, body: null, contact: null };
-  private World_step_oldContacts: any[] = []; // Pools for unused objects
-  private World_step_frictionEquationPool: any[] = [];
-  private World_step_p1: any[] = []; // Reusable arrays for collision pairs
-  private World_step_p2: any[] = [];
-  private World_step_gvec = new Vec3(); // Temporary vectors and quats
-  private World_step_vi = new Vec3();
-  private World_step_vj = new Vec3();
-  private World_step_wi = new Vec3();
-  private World_step_wj = new Vec3();
-  private World_step_t1 = new Vec3();
-  private World_step_t2 = new Vec3();
-  private World_step_rixn = new Vec3();
-  private World_step_rjxn = new Vec3();
-  private World_step_step_q = new Quaternion();
-  private World_step_step_w = new Quaternion();
-  private World_step_step_wq = new Quaternion();
-  private invI_tau_dt = new Vec3();
-
   internalStep(dt: number) {
     this.dt = dt;
 
-    const world = this,
-      that = this,
-      contacts = this.contacts,
+    const contacts = this.contacts,
       p1 = this.World_step_p1,
       p2 = this.World_step_p2,
       N = this.numObjects(),
@@ -689,7 +672,6 @@ export class World extends EventTarget {
       DYNAMIC = Body.DYNAMIC,
       constraints = this.constraints,
       frictionEquationPool = this.World_step_frictionEquationPool,
-      gnorm = gravity.norm(),
       gx = gravity.x,
       gy = gravity.y,
       gz = gravity.z;

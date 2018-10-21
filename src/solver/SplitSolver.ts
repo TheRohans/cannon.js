@@ -18,8 +18,6 @@ export class SplitNode {
  * @param {Solver} subsolver
  */
 export class SplitSolver extends Solver {
-  static STATIC = Body.STATIC;
-
   iterations: number;
   tolerance: number;
   subsolver: SplitSolver;
@@ -127,7 +125,7 @@ function getUnvisitedNode(nodes: SplitNode[]): SplitNode {
   const Nnodes = nodes.length;
   for (let i = 0; i !== Nnodes; i++) {
     const node = nodes[i];
-    if (!node.visited && !(node.body.type & SplitSolver.STATIC)) {
+    if (!node.visited && !(node.body.type & Body.STATIC)) {
       return node;
     }
   }

@@ -1,5 +1,14 @@
 import { Material } from './Material';
 
+export interface ContactMaterialOptions {
+  friction?: number;
+  restitution?: number;
+  contactEquationStiffness?: number;
+  contactEquationRelaxation?: number;
+  frictionEquationStiffness?: number;
+  frictionEquationRelaxation?: number;
+}
+
 /**
  * Defines what happens when two materials meet.
  * @class ContactMaterial
@@ -27,7 +36,8 @@ export class ContactMaterial {
   frictionEquationStiffness: number;
   frictionEquationRelaxation: number;
 
-  constructor(m1?: Material, m2?: Material, options: any = {}) {
+  constructor(m1?: Material, m2?: Material,
+    options: ContactMaterialOptions = <ContactMaterialOptions>{}) {
 
     options = Object.assign({
       friction: 0.3,

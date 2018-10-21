@@ -155,7 +155,6 @@ export class ConvexPolyhedron extends Shape {
         // TODO: If you pass in normals that render correctly and seem to be in CCW order
         // this throws errors. I think there is some subtle bug that is fixed by alwasy computing
         // the normals here. I am punting on this for now - ConvexConvex needs tests!
-        //
         // const vertex = this.vertices[this.faces[i][0]];
         // if (n.dot(vertex) < 0) {
         //   console.warn('.faceNormals[' + i + '] = Vec3(' + n.toString()

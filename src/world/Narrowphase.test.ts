@@ -44,7 +44,7 @@ describe('Narrowphase', () => {
     const bodyB = new Body({ mass: 1 });
     bodyB.addShape(sphereShape);
 
-    cg.currentContactMaterial = new ContactMaterial();
+    cg.currentContactMaterial = cm;
     cg.result = result;
     cg.sphereSphere(
       sphereShape,
@@ -64,6 +64,7 @@ describe('Narrowphase', () => {
     const mc = mockCube();
 
     const world = new World();
+    world.defaultContactMaterial = cm;
     const np = new Narrowphase(world);
 
     const s1 = new ConvexPolyhedron(mc[0], mc[2]);

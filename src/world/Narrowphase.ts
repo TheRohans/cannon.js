@@ -232,7 +232,6 @@ export class Narrowphase {
     const xj = this.tmpVec2;
 
     for (let k = 0, N = p1.length; k !== N; k++) {
-
       // Get current collision bodies
       const bi = p1[k],
         bj = p2[k];
@@ -243,6 +242,8 @@ export class Narrowphase {
         bodyContactMaterial = world.getContactMaterial(bi.material, bj.material) || null;
       }
 
+      // JustTest is used to know if we're just reporting a collision
+      // e.g. triggers, etc
       const justTest = !!(
         ((bi.type & Body.KINEMATIC) && (bj.type & Body.STATIC))
         ||
@@ -251,6 +252,7 @@ export class Narrowphase {
         ((bi.type & Body.KINEMATIC) && (bj.type & Body.KINEMATIC))
       );
 
+      // bodies can have many shapes attached
       for (let i = 0; i < bi.shapes.length; i++) {
         bi.quaternion.mult(bi.shapeOrientations[i], qi);
         bi.quaternion.vmult(bi.shapeOffsets[i], xi);
@@ -258,14 +260,15 @@ export class Narrowphase {
         const si = bi.shapes[i];
 
         for (let j = 0; j < bj.shapes.length; j++) {
-
           // Compute world transform of shapes
           bj.quaternion.mult(bj.shapeOrientations[j], qj);
           bj.quaternion.vmult(bj.shapeOffsets[j], xj);
           xj.vadd(bj.position, xj);
           const sj = bj.shapes[j];
 
-          if (!((si.collisionFilterMask & sj.collisionFilterGroup) && (sj.collisionFilterMask & si.collisionFilterGroup))) {
+          // If the shapes are in some sort of group (layer) and not in the same group skip
+          if (!((si.collisionFilterMask & sj.collisionFilterGroup)
+            && (sj.collisionFilterMask & si.collisionFilterGroup))) {
             continue;
           }
 
@@ -279,7 +282,9 @@ export class Narrowphase {
             shapeContactMaterial = world.getContactMaterial(si.material, sj.material) || null;
           }
 
-          this.currentContactMaterial = shapeContactMaterial || bodyContactMaterial || world.defaultContactMaterial;
+          this.currentContactMaterial = shapeContactMaterial
+              || bodyContactMaterial
+              || world.defaultContactMaterial;
 
           // Get contacts
           // let resolver = this[si.type | sj.type];
@@ -1138,10 +1143,10 @@ export class Narrowphase {
     const faces = csj.faces;
     const verts = csj.vertices;
     const R = ssi.radius;
-    const penetrating_sides = [];
+    // const penetrating_sides = [];
 
-    // if(convex_to_sphere.norm2() > si.boundingSphereRadius + sj.boundingSphereRadius){
-    //     return;
+    // if (this.convex_to_sphere.norm2() > si.boundingSphereRadius + sj.boundingSphereRadius) {
+    //   return false;
     // }
 
     // Check corners
@@ -1158,7 +1163,6 @@ export class Narrowphase {
         if (justTest) {
           return true;
         }
-        // found = true;
         const r = this.createContactEquation(bi, bj, si, sj, rsi, rsj);
         r.ri.copy(sphere_to_corner);
         r.ri.normalize();
@@ -1235,7 +1239,6 @@ export class Narrowphase {
           const penetrationSpherePoint = v3pool.get();
           worldNormal.mult(-R, penetrationSpherePoint);
 
-          // xi.vsub(xj).vadd(penetrationSpherePoint).vadd(penetrationVec2 , r.rj);
           xi.vsub(xj, r.rj);
           r.rj.vadd(penetrationSpherePoint, r.rj);
           r.rj.vadd(penetrationVec2, r.rj);
@@ -1349,8 +1352,6 @@ export class Narrowphase {
     return false;
   }
 
-  private planeBox_normal = new Vec3();
-  private plane_to_corner = new Vec3();
   /**
    * @method planeBox
    * @param  {Array}      result

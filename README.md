@@ -98,7 +98,7 @@ var lastTime;
 | :-----------|:------:|:-----:|:---:|:------:|:--------:|:-----------:|:-------:|
 | Sphere      | Yes    | Yes   | Yes | Yes    | NT       | TD          | TD      |
 | Plane       | -      | -     | Yes | Yes    | NT       | -           | TD      |
-| Box         | -      | -     | Yes | Yes    | NT       | TD          | TD      |
+| Box         | -      | -     | Yes | BU     | NT       | TD          | TD      |
 | Cylinder    | -      | -     | NT  | NT     | NT       | TD          | TD      |
 | Convex      | -      | -     | -   | BU     | NT       | TD          | TD      |
 | Particle    | -      | -     | -   | -      | -        | TD          | TD      |

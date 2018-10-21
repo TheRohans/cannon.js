@@ -578,7 +578,6 @@ export class World extends EventTarget {
    * @param {ContactMaterial} cmat
    */
   addContactMaterial(cmat: ContactMaterial) {
-
     // Add contact material
     this.contactmaterials.push(cmat);
 

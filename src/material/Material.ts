@@ -21,9 +21,9 @@ export class Material {
 
   constructor(options: MaterialOptions = <MaterialOptions>{}) {
     options = Object.assign({
-      name: '',
-      friction: -1,
-      restitution: -1
+      name: 'default',
+      friction: 0.3,
+      restitution: 0.3
     }, options);
 
     /**

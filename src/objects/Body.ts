@@ -690,29 +690,18 @@ export class Body extends EventTarget {
    * Add a shape to the body with a local offset and orientation.
    * @method addShape
    * @param {Shape} shape
-   * @param {Vec3} [_offset]
-   * @param {Quaternion} [_orientation]
+   * @param {Vec3} [offset]
+   * @param {Quaternion} [orientation]
    * @return {Body} The body object, for chainability.
    */
-  addShape(shape: Shape, _offset?: Vec3, _orientation?: Quaternion) {
-    const offset = new Vec3();
-    const orientation = new Quaternion();
-
-    if (_offset) {
-      offset.copy(_offset);
-    }
-    if (_orientation) {
-      orientation.copy(_orientation);
-    }
-
+  addShape(shape: Shape, offset?: Vec3, orientation?: Quaternion) {
     this.shapes.push(shape);
-    this.shapeOffsets.push(offset);
-    this.shapeOrientations.push(orientation);
+    this.shapeOffsets.push(offset || new Vec3());
+    this.shapeOrientations.push(orientation || new Quaternion());
     this.updateMassProperties();
     this.updateBoundingRadius();
 
     this.aabbNeedsUpdate = true;
-
     shape.body = this;
 
     return this;

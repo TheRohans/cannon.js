@@ -39,7 +39,7 @@ export class ContactMaterial {
   constructor(m1?: Material, m2?: Material,
     options: ContactMaterialOptions = <ContactMaterialOptions>{}) {
 
-    options = Object.assign({
+    const ops = Object.assign({
       friction: 0.3,
       restitution: 0.3,
       contactEquationStiffness: 1e7,
@@ -59,43 +59,43 @@ export class ContactMaterial {
      * @property {Array} materials
      * @todo  Should be .materialA and .materialB instead
      */
-    this.materials = [m1, m2];
+    this.materials = [m1 || new Material(), m2 || new Material()];
 
     /**
      * Friction coefficient
      * @property {Number} friction
      */
-    this.friction = options.friction;
+    this.friction = ops.friction;
 
     /**
      * Restitution coefficient
      * @property {Number} restitution
      */
-    this.restitution = options.restitution;
+    this.restitution = ops.restitution;
 
     /**
      * Stiffness of the produced contact equations
      * @property {Number} contactEquationStiffness
      */
-    this.contactEquationStiffness = options.contactEquationStiffness;
+    this.contactEquationStiffness = ops.contactEquationStiffness;
 
     /**
      * Relaxation time of the produced contact equations
      * @property {Number} contactEquationRelaxation
      */
-    this.contactEquationRelaxation = options.contactEquationRelaxation;
+    this.contactEquationRelaxation = ops.contactEquationRelaxation;
 
     /**
      * Stiffness of the produced friction equations
      * @property {Number} frictionEquationStiffness
      */
-    this.frictionEquationStiffness = options.frictionEquationStiffness;
+    this.frictionEquationStiffness = ops.frictionEquationStiffness;
 
     /**
      * Relaxation time of the produced friction equations
      * @property {Number} frictionEquationRelaxation
      */
-    this.frictionEquationRelaxation = options.frictionEquationRelaxation;
+    this.frictionEquationRelaxation = ops.frictionEquationRelaxation;
   }
 }
 

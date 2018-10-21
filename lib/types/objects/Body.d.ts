@@ -94,7 +94,7 @@ export declare class Body extends EventTarget {
     vectorToWorldFrame(localVector: Vec3, result?: Vec3): Vec3;
     private tmpVec;
     private tmpQuat;
-    addShape(shape: Shape, _offset?: Vec3, _orientation?: Quaternion): this;
+    addShape(shape: Shape, offset?: Vec3, orientation?: Quaternion): this;
     updateBoundingRadius(): void;
     private computeAABB_shapeAABB;
     computeAABB(): void;

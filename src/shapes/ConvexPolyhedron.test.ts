@@ -35,6 +35,45 @@ describe('ConvexPolyhedron', () => {
     });
   });
 
+  it('should caclualte surface norms', () => {
+    const p1 = new Vec3(5, 4, -12);
+    const p2 = new Vec3(5, 12, -12);
+    const p3 = new Vec3(5, 4, -4);
+    const target = new Vec3();
+
+    ConvexPolyhedron.computeNormal(p1, p2, p3, target);
+
+    expect(target.x).toEqual(1);
+    expect(target.y).not.toBeGreaterThan(0);
+    expect(target.z).not.toBeGreaterThan(0);
+  });
+
+  it('should caclualte surface norms 2', () => {
+    const p1 = new Vec3(12, 3, -4);
+    const p2 = new Vec3(12, 3, -12);
+    const p3 = new Vec3(12, 5, -12);
+    const target = new Vec3();
+
+    ConvexPolyhedron.computeNormal(p1, p2, p3, target);
+
+    expect(target.x).toEqual(1);
+    expect(target.y).not.toBeGreaterThan(0);
+    expect(target.z).not.toBeGreaterThan(0);
+  });
+
+  it('should caclualte surface norms 3', () => {
+    const p1 = new Vec3(4, 3, -12);
+    const p2 = new Vec3(4, 3, -4);
+    const p3 = new Vec3(4, 5, -4);
+    const target = new Vec3();
+
+    ConvexPolyhedron.computeNormal(p1, p2, p3, target);
+
+    expect(target.x).toEqual(1);
+    expect(target.y).not.toBeGreaterThan(0);
+    expect(target.z).not.toBeGreaterThan(0);
+  });
+
   it('should clipFaceAgainstPlane', () => {
     const h = mockBoxHull();
 

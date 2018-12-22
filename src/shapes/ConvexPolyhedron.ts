@@ -149,11 +149,12 @@ export class ConvexPolyhedron extends Shape {
         }
 
         const n = this.faceNormals[i] || new Vec3();
+        // const n = new Vec3();
         this.getFaceNormal(i, n);
         this.faceNormals[i] = n;
 
         // TODO: If you pass in normals that render correctly and seem to be in CCW order
-        // this throws errors. I think there is some subtle bug that is fixed by alwasy computing
+        // this throws errors. I think there is some subtle bug that is fixed by always computing
         // the normals here. I am punting on this for now - ConvexConvex needs tests!
         // const vertex = this.vertices[this.faces[i][0]];
         // if (n.dot(vertex) < 0) {
@@ -238,43 +239,80 @@ export class ConvexPolyhedron extends Shape {
     quatB: Quaternion, separatingNormal: Vec3, minDist: number, maxDist: number, result: HullResult[]) {
 
     const WorldNormal = this.cah_WorldNormal;
-    let closestFaceB: number[] = [];
+    // const hullA = this;
+    // const curMaxDist = maxDist;
+    let closestFaceB = -1;
     let dmax = -Number.MAX_VALUE;
-
     for (let face = 0; face < hullB.faces.length; face++) {
-      WorldNormal.copy(hullB.faceNormals[face]);
-      quatB.vmult(WorldNormal, WorldNormal);
-      const d = WorldNormal.dot(separatingNormal);
-      if (d > dmax) {
-        dmax = d;
-        closestFaceB = [face];
-      } else if (d === dmax) {
-        closestFaceB.push(face);
-      }
+        WorldNormal.copy(hullB.faceNormals[face]);
+        quatB.vmult(WorldNormal, WorldNormal);
+        // posB.vadd(WorldNormal,WorldNormal);
+        const d = WorldNormal.dot(separatingNormal);
+        if (d > dmax) {
+            dmax = d;
+            closestFaceB = face;
+        }
     }
-
-    closestFaceB.forEach( fb => {
-      const worldVertsB1: Vec3[] = [];
-      const polyB = hullB.faces[fb];
-      const numVertices = polyB.length;
-
-      for (let e0 = 0; e0 < numVertices; e0++) {
+    const worldVertsB1 = [];
+    const polyB = hullB.faces[closestFaceB];
+    const numVertices = polyB.length;
+    for (let e0 = 0; e0 < numVertices; e0++) {
         const b = hullB.vertices[polyB[e0]];
         const worldb = new Vec3();
         worldb.copy(b);
         quatB.vmult(worldb, worldb);
         posB.vadd(worldb, worldb);
         worldVertsB1.push(worldb);
-      }
+    }
 
-      this.clipFaceAgainstHull(separatingNormal,
-        posA,
-        quatA,
-        worldVertsB1,
-        minDist,
-        maxDist,
-        result);
-    });
+    if (closestFaceB >= 0) {
+        this.clipFaceAgainstHull(separatingNormal,
+                                 posA,
+                                 quatA,
+                                 worldVertsB1,
+                                 minDist,
+                                 maxDist,
+                                 result);
+    }
+
+    // const WorldNormal = this.cah_WorldNormal;
+    // let closestFaceB: number[] = [];
+    // let dmax = -Number.MAX_VALUE;
+
+    // for (let face = 0; face < hullB.faces.length; face++) {
+    //   WorldNormal.copy(hullB.faceNormals[face]);
+    //   quatB.vmult(WorldNormal, WorldNormal);
+    //   const d = WorldNormal.dot(separatingNormal);
+    //   if (d > dmax) {
+    //     dmax = d;
+    //     closestFaceB = [face];
+    //   } else if (d === dmax) {
+    //     closestFaceB.push(face);
+    //   }
+    // }
+
+    // closestFaceB.forEach( fb => {
+    //   const worldVertsB1: Vec3[] = [];
+    //   const polyB = hullB.faces[fb];
+    //   const numVertices = polyB.length;
+
+    //   for (let e0 = 0; e0 < numVertices; e0++) {
+    //     const b = hullB.vertices[polyB[e0]];
+    //     const worldb = new Vec3();
+    //     worldb.copy(b);
+    //     quatB.vmult(worldb, worldb);
+    //     posB.vadd(worldb, worldb);
+    //     worldVertsB1.push(worldb);
+    //   }
+
+    //   this.clipFaceAgainstHull(separatingNormal,
+    //     posA,
+    //     quatA,
+    //     worldVertsB1,
+    //     minDist,
+    //     maxDist,
+    //     result);
+    // });
   }
 
   private fsa_faceANormalWS3 = new Vec3();

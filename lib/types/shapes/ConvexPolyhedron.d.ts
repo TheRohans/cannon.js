@@ -21,6 +21,7 @@ export declare class ConvexPolyhedron extends Shape {
     computeNormals(): void;
     static computeNormal(va: Vec3, vb: Vec3, vc: Vec3, target?: Vec3): void;
     getFaceNormal(i: number, target?: Vec3): Vec3;
+    findClosestFace(hull: ConvexPolyhedron, quat: Quaternion, separatingNormal: Vec3, useMin?: boolean): number;
     private cah_WorldNormal;
     clipAgainstHull(posA: Vec3, quatA: Quaternion, hullB: ConvexPolyhedron, posB: Vec3, quatB: Quaternion, separatingNormal: Vec3, minDist: number, maxDist: number, result: HullResult[]): void;
     private fsa_faceANormalWS3;
@@ -35,7 +36,6 @@ export declare class ConvexPolyhedron extends Shape {
     cli_aabbmax: Vec3;
     calculateLocalInertia(mass: number, target: Vec3): void;
     getPlaneConstantOfFace(face_i: number): number;
-    private cfah_faceANormalWS;
     private cfah_edge0;
     private cfah_WorldEdge0;
     private cfah_worldPlaneAnormal1;

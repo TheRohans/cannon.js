@@ -10,9 +10,7 @@ export class Transform {
   position: Vec3;
   quaternion: Quaternion;
 
-  constructor(options?: any) {
-    options = options || {};
-
+  constructor(options: any = {}) {
     /**
      * @property {Vec3} position
      */

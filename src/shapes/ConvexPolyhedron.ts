@@ -221,6 +221,38 @@ export class ConvexPolyhedron extends Shape {
     return tg;
   }
 
+  findClosestFace(hull: ConvexPolyhedron, quat: Quaternion,
+    separatingNormal: Vec3, useMin = false): number {
+    const scratchVec = this.cah_WorldNormal;
+
+    let dmax = -Number.MAX_VALUE;
+    let dmin = Number.MAX_VALUE;
+    let closestFace = -1;
+
+    // let face = hull.faces.length;
+    // while (face--) {
+    const flen = hull.faces.length;
+    for (let face = 0; face < flen; face++) {
+      scratchVec.copy(hull.faceNormals[face]);
+      quat.vmult(scratchVec, scratchVec);
+      const d = scratchVec.dot(separatingNormal);
+      if (useMin) {
+        if (d < dmin) {
+          dmin = d;
+          closestFace = face;
+        }
+      } else {
+        if (d > dmax) {
+          dmax = d;
+          closestFace = face;
+        }
+      }
+    }
+
+    return closestFace;
+  }
+
+
   private cah_WorldNormal = new Vec3();
   /**
    * @method clipAgainstHull
@@ -238,21 +270,8 @@ export class ConvexPolyhedron extends Shape {
   clipAgainstHull(posA: Vec3, quatA: Quaternion, hullB: ConvexPolyhedron, posB: Vec3,
     quatB: Quaternion, separatingNormal: Vec3, minDist: number, maxDist: number, result: HullResult[]) {
 
-    const WorldNormal = this.cah_WorldNormal;
-    // const hullA = this;
-    // const curMaxDist = maxDist;
-    let closestFaceB = -1;
-    let dmax = -Number.MAX_VALUE;
-    for (let face = 0; face < hullB.faces.length; face++) {
-        WorldNormal.copy(hullB.faceNormals[face]);
-        quatB.vmult(WorldNormal, WorldNormal);
-        // posB.vadd(WorldNormal,WorldNormal);
-        const d = WorldNormal.dot(separatingNormal);
-        if (d > dmax) {
-            dmax = d;
-            closestFaceB = face;
-        }
-    }
+    const closestFaceB = this.findClosestFace(hullB, quatB, separatingNormal);
+
     const worldVertsB1 = [];
     const polyB = hullB.faces[closestFaceB];
     const numVertices = polyB.length;
@@ -529,7 +548,6 @@ export class ConvexPolyhedron extends Shape {
     return c;
   }
 
-  private cfah_faceANormalWS = new Vec3();
   private cfah_edge0 = new Vec3();
   private cfah_WorldEdge0 = new Vec3();
   private cfah_worldPlaneAnormal1 = new Vec3();
@@ -553,8 +571,7 @@ export class ConvexPolyhedron extends Shape {
   clipFaceAgainstHull(separatingNormal: Vec3, posA: Vec3, quatA: Quaternion,
     worldVertsB1: Vec3[], minDist: number, maxDist: number, result: HullResult[]) {
 
-    const faceANormalWS = this.cfah_faceANormalWS,
-      edge0 = this.cfah_edge0,
+    const edge0 = this.cfah_edge0,
       WorldEdge0 = this.cfah_WorldEdge0,
       worldPlaneAnormal1 = this.cfah_worldPlaneAnormal1,
       planeNormalWS1 = this.cfah_planeNormalWS1,
@@ -567,19 +584,8 @@ export class ConvexPolyhedron extends Shape {
     const pVtxIn = worldVertsB1;
     const pVtxOut = worldVertsB2;
 
-    // Find the face with normal closest to the separating axis
-    let closestFaceA = -1;
-    let dmin = Number.MAX_VALUE;
-    for (let face = 0; face < hullA.faces.length; face++) {
-      faceANormalWS.copy(hullA.faceNormals[face]);
-      quatA.vmult(faceANormalWS, faceANormalWS);
-      // posA.vadd(faceANormalWS,faceANormalWS);
-      const d = faceANormalWS.dot(separatingNormal);
-      if (d < dmin) {
-        dmin = d;
-        closestFaceA = face;
-      }
-    }
+    const closestFaceA = this.findClosestFace(hullA, quatA, separatingNormal, true);
+
     if (closestFaceA < 0) {
       // console.error('--- did not find any closest face... ---');
       return;

@@ -16,9 +16,7 @@ export class AABB {
   lowerBound: Vec3;
   upperBound: Vec3;
 
-  constructor(options?: any) {
-    options = options || {};
-
+  constructor(options: any = {}) {
     /**
      * The lower bound of the bounding box.
      * @property lowerBound

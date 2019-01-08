@@ -517,5 +517,26 @@ describe('ConvexPolyhedron', () => {
     expect(max.z).not.toBeUndefined();
   });
 
+  it('should find the closest face', () => {
+    const mc = mockCube();
+    const cp = new ConvexPolyhedron(mc[0], mc[2]);
+
+    const actual = cp.findClosestFace(
+      cp, new Quaternion().setFromEuler(0, 90, 0, 'XYZ'), new Vec3(0, 1, 0), false
+    );
+
+    expect(actual).toEqual(5);
+  });
+
+  it('should find the closest face 2', () => {
+    const mc = mockCube();
+    const cp = new ConvexPolyhedron(mc[0], mc[2]);
+
+    const actual = cp.findClosestFace(
+      cp, new Quaternion().setFromEuler(0, 90, 0, 'XYZ'), new Vec3(0, -1, 0)
+    );
+
+    expect(actual).toEqual(4);
+  });
 });
 

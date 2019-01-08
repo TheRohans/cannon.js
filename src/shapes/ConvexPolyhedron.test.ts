@@ -69,7 +69,7 @@ describe('ConvexPolyhedron', () => {
 
     ConvexPolyhedron.computeNormal(p1, p2, p3, target);
 
-    expect(target.x).toEqual(1);
+    expect(target.x).toEqual(-1);
     expect(target.y).not.toBeGreaterThan(0);
     expect(target.z).not.toBeGreaterThan(0);
   });

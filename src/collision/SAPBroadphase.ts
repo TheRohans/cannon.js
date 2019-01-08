@@ -156,7 +156,7 @@ export class SAPBroadphase extends Broadphase {
     const bodies = this.axisList,
       N = bodies.length,
       axisIndex = this.axisIndex;
-    let i, j;
+    let i = N;
 
     if (this.dirty) {
       this.sortList();
@@ -164,10 +164,11 @@ export class SAPBroadphase extends Broadphase {
     }
 
     // Look through the list
-    for (i = 0; i !== N; i++) {
+    while (i--) {
       const bi = bodies[i];
 
-      for (j = i + 1; j < N; j++) {
+      let j = i;
+      while (j-- && i > 0) {
         const bj = bodies[j];
 
         if (!this.needBroadphaseCollision(bi, bj)) {
@@ -232,10 +233,10 @@ export class SAPBroadphase extends Broadphase {
 
     const ri = bi.boundingRadius,
       rj = bj.boundingRadius,
-      boundA1 = biPos - ri,
+      // boundA1 = biPos - ri,
       boundA2 = biPos + ri,
-      boundB1 = bjPos - rj,
-      boundB2 = bjPos + rj;
+      boundB1 = bjPos - rj;
+      // boundB2 = bjPos + rj;
 
     return boundB1 < boundA2;
   }

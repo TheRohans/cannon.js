@@ -345,13 +345,14 @@ export class ConvexPolyhedron extends Shape {
 
     let dmin = Number.MAX_VALUE;
     const hullA = this;
-    let curPlaneTests = 0;
+    // let curPlaneTests = 0;
 
     if (!hullA.uniqueAxes) {
       const numFacesA = faceListA ? faceListA.length : hullA.faces.length;
 
       // Test face normals from hullA
-      for (let i = 0; i < numFacesA; i++) {
+      let i = numFacesA;
+      while (i--) {
         const fi = faceListA ? faceListA[i] : i;
 
         // Get world face normal
@@ -370,8 +371,8 @@ export class ConvexPolyhedron extends Shape {
       }
     } else {
       // Test unique axes
-      for (let i = 0; i !== hullA.uniqueAxes.length; i++) {
-
+      let i = hullA.uniqueAxes.length;
+      while (i--) {
         // Get world axis
         quatA.vmult(hullA.uniqueAxes[i], faceANormalWS3);
 
@@ -396,7 +397,7 @@ export class ConvexPolyhedron extends Shape {
 
         Worldnormal1.copy(hullB.faceNormals[fi]);
         quatB.vmult(Worldnormal1, Worldnormal1);
-        curPlaneTests++;
+        // curPlaneTests++;
         const [b, d] = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
         if (b === false) {
           return false;
@@ -409,10 +410,11 @@ export class ConvexPolyhedron extends Shape {
       }
     } else {
       // Test unique axes in B
-      for (let i = 0; i !== hullB.uniqueAxes.length; i++) {
+      let i = hullB.uniqueAxes.length;
+      while (i--) {
         quatB.vmult(hullB.uniqueAxes[i], Worldnormal1);
 
-        curPlaneTests++;
+        // curPlaneTests++;
         const [b, d] = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
         if (b === false) {
           return false;
@@ -426,12 +428,13 @@ export class ConvexPolyhedron extends Shape {
     }
 
     // Test edges
-    for (let e0 = 0; e0 !== hullA.uniqueEdges.length; e0++) {
+    let e0 = hullA.uniqueEdges.length;
+    while (e0--) {
       // Get world edge
       quatA.vmult(hullA.uniqueEdges[e0], worldEdge0);
 
-      for (let e1 = 0; e1 !== hullB.uniqueEdges.length; e1++) {
-
+      let e1 = hullB.uniqueEdges.length;
+      while (e1--) {
         // Get world edge 2
         quatB.vmult(hullB.uniqueEdges[e1], worldEdge1);
         worldEdge0.cross(worldEdge1, Cross);
@@ -986,6 +989,10 @@ export class ConvexPolyhedron extends Shape {
     return true;
   }
 
+
+  // static project_worldVertex = new Vec3();
+  static project_localAxis = new Vec3();
+  static project_localOrigin = new Vec3();
   /**
    * Get max and min dot product of a convex hull at position (pos,quat) projected onto an axis. Results are saved in the array maxmin.
    * @static
@@ -997,14 +1004,10 @@ export class ConvexPolyhedron extends Shape {
    * @param {array} result result[0] and result[1] will be set to maximum and minimum, respectively.
    */
   static project(hull: ConvexPolyhedron, axis: Vec3, pos: Vec3, quat: Quaternion, result: number[]) {
-    const project_worldVertex = new Vec3();
-    const project_localAxis = new Vec3();
-    const project_localOrigin = new Vec3();
 
-    const n = hull.vertices.length,
-      worldVertex = project_worldVertex,
-      localAxis = project_localAxis,
-      localOrigin = project_localOrigin,
+    // worldVertex = ConvexPolyhedron.project_worldVertex,
+    const localAxis = ConvexPolyhedron.project_localAxis,
+      localOrigin = ConvexPolyhedron.project_localOrigin,
       vs = hull.vertices;
     let max = 0,
       min = 0;
@@ -1018,7 +1021,8 @@ export class ConvexPolyhedron extends Shape {
 
     min = max = vs[0].dot(localAxis);
 
-    for (let i = 1; i < n; i++) {
+    let i = hull.vertices.length;
+    while (i--) {
       const val = vs[i].dot(localAxis);
 
       if (val > max) {

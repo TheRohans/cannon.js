@@ -57,5 +57,7 @@ export declare class ConvexPolyhedron extends Shape {
     private ConvexPolyhedron_vToP;
     private ConvexPolyhedron_vToPointInside;
     pointIsInside(p: Vec3): boolean;
+    static project_localAxis: Vec3;
+    static project_localOrigin: Vec3;
     static project(hull: ConvexPolyhedron, axis: Vec3, pos: Vec3, quat: Quaternion, result: number[]): void;
 }

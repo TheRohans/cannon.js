@@ -231,7 +231,9 @@ export class Narrowphase {
     const xi = this.tmpVec1;
     const xj = this.tmpVec2;
 
-    for (let k = 0, N = p1.length; k !== N; k++) {
+    const N = p1.length;
+    let k = N;
+    while (k--) {
       // Get current collision bodies
       const bi = p1[k],
         bj = p2[k];
@@ -253,13 +255,15 @@ export class Narrowphase {
       );
 
       // bodies can have many shapes attached
-      for (let i = 0; i < bi.shapes.length; i++) {
+      let i = bi.shapes.length;
+      while (i--) {
         bi.quaternion.mult(bi.shapeOrientations[i], qi);
         bi.quaternion.vmult(bi.shapeOffsets[i], xi);
         xi.vadd(bi.position, xi);
         const si = bi.shapes[i];
 
-        for (let j = 0; j < bj.shapes.length; j++) {
+        let j = bj.shapes.length;
+        while (j--) {
           // Compute world transform of shapes
           bj.quaternion.mult(bj.shapeOrientations[j], qj);
           bj.quaternion.vmult(bj.shapeOffsets[j], xj);
@@ -1150,7 +1154,8 @@ export class Narrowphase {
     // }
 
     // Check corners
-    for (let i = 0; i !== verts.length; i++) {
+    let i = verts.length;
+    while (i--) {
       const v = verts[i];
 
       // World position of corner
@@ -1186,7 +1191,9 @@ export class Narrowphase {
 
     // Check side (plane) intersections
     let found = false;
-    for (let i = 0, nfaces = faces.length; i !== nfaces && found === false; i++) {
+    const nfaces = faces.length;
+    i = nfaces;
+    while (i-- && found === false) {
       const normal = normals[i];
       const face = faces[i];
 
@@ -1217,7 +1224,9 @@ export class Narrowphase {
       if (penetration < 0 && worldPointToSphere.dot(worldNormal) > 0) {
         // Intersects plane. Now check if the sphere is inside the face polygon
         const faceVerts = []; // Face vertices, in world coords
-        for (let j = 0, Nverts = face.length; j !== Nverts; j++) {
+        const Nverts = face.length;
+        let j = Nverts;
+        while (j--) {
           const worldVertex = v3pool.get();
           qj.vmult(verts[face[j]], worldVertex);
           xj.vadd(worldVertex, worldVertex);
@@ -1258,14 +1267,17 @@ export class Narrowphase {
           this.createFrictionEquationsFromContact(r, this.frictionResult);
 
           // Release world vertices
-          for (let j = 0, Nfaceverts = faceVerts.length; j !== Nfaceverts; j++) {
+          // const Nfaceverts = faceVerts.length;
+          j = faceVerts.length; // Nfaceverts;
+          while (j--) {
             v3pool.release(faceVerts[j]);
           }
 
           return false; // We only expect *one* face contact
         } else {
           // Edge?
-          for (let j = 0; j !== face.length; j++) {
+          j = face.length;
+          while (j--) {
             // Get two world transformed vertices
             const v1 = v3pool.get();
             const v2 = v3pool.get();
@@ -1322,7 +1334,8 @@ export class Narrowphase {
               this.createFrictionEquationsFromContact(r, this.frictionResult);
 
               // Release world vertices
-              for (let jj = 0, Nfaceverts = faceVerts.length; jj !== Nfaceverts; jj++) {
+              let jj = faceVerts.length;
+              while (jj--) {
                 v3pool.release(faceVerts[jj]);
               }
 
@@ -1344,7 +1357,8 @@ export class Narrowphase {
         }
 
         // Release world vertices
-        for (let j = 0, Nfaceverts = faceVerts.length; j !== Nfaceverts; j++) {
+        j = faceVerts.length;
+        while (j--) {
           v3pool.release(faceVerts[j]);
         }
       }
@@ -1503,7 +1517,8 @@ export class Narrowphase {
 
       cpsi.clipAgainstHull(xi, qi, <ConvexPolyhedron>sj, xj, qj, sepAxis, -100, 100, res);
 
-      for (let j = 0; j !== res.length; j++) {
+      let j = res.length;
+      while (j--) {
         if (justTest) {
           return true;
         }

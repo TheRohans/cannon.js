@@ -390,7 +390,7 @@ export class Body extends EventTarget {
      * @property sleepState
      * @type {Number}
      */
-    this.sleepState = 0;
+    this.sleepState = Body.AWAKE;
 
     /**
      * If the speed (the norm of the velocity) is smaller than this value, the body is considered sleepy.
@@ -587,7 +587,7 @@ export class Body extends EventTarget {
    */
   wakeUp() {
     const s = this.sleepState;
-    this.sleepState = 0;
+    this.sleepState = Body.AWAKE;
     this._wakeUpAfterNarrowphase = false;
     if (s === Body.SLEEPING) {
       this.dispatchEvent(Body.wakeupEvent);
@@ -770,7 +770,8 @@ export class Body extends EventTarget {
       aabb = this.aabb,
       shapeAABB = this.computeAABB_shapeAABB;
 
-    for (let i = 0; i !== N; i++) {
+    let i = N;
+    while (i--) {
       const shape = shapes[i];
 
       // Get shape world position

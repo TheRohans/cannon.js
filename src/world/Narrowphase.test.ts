@@ -147,7 +147,7 @@ describe('Narrowphase', () => {
     );
 
     expect(actual).toEqual(true);
-    expect(np.result.length).toEqual(8);
+    expect(np.result.length).toEqual(3);
   });
 
   it('should return true if convexConvex does touch Y (quad)', () => {
@@ -206,7 +206,7 @@ describe('Narrowphase', () => {
     );
 
     expect(actual).toEqual(true);
-    expect(np.result.length).toEqual(8);
+    expect(np.result.length).toEqual(3);
   });
 
   it('should return true if convexConvex does touch Z (quad)', () => {
@@ -265,7 +265,7 @@ describe('Narrowphase', () => {
     );
 
     expect(actual).toEqual(true);
-    expect(np.result.length).toEqual(8);
+    expect(np.result.length).toEqual(3);
   });
 
   // it('should sphereHeightfield', () => {

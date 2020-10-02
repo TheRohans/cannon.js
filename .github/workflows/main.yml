@@ -29,8 +29,13 @@ jobs:
       run: npm run build
     - name: npm test
       run: npm test
-    - name: publish coverage
-      uses: romeovs/lcov-reporter-action@v0.2.16
+    - name: Code Climate Coverage Action
+      # You may pin to the exact commit or the version.
+      # uses: paambaati/codeclimate-action@738fb8ce9bd3dda56152c27bd729624b4ebd9935
+      uses: paambaati/codeclimate-action@v2.7.3
+      env:
+        # Set CC_TEST_REPORTER_ID as secret of your repo
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        lcov-file: ./coverage/lcov.info
+        coverageCommand: npm run test
+        debug: true

@@ -1,10 +1,8 @@
 # 大炮 (Dàpào)
 
-![Build Status](https://codebuild.us-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiVmcwUTAvM24vTWhrZ1NTUDJXL1Y2bWdVOHZtaDQ0ZUt2ZDNBaGp2QVdCUVVJM3BPS0ZDRk1IRVo3RGdvS0lkak1iSGRtZDl5dUJ1R1lxVUV3QTFmOTBnPSIsIml2UGFyYW1ldGVyU3BlYyI6IjJEakF3UDlsbXBMa0ZnRmkiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c892a4997cd37710f644/maintainability)](https://codeclimate.com/github/TheRohans/dapao/maintainability)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/0104a62d68c854d8a4c5/maintainability)](https://codeclimate.com/github/TheRohans/dapao/maintainability)
-
-[![Test Coverage](https://api.codeclimate.com/v1/badges/0104a62d68c854d8a4c5/test_coverage)](https://codeclimate.com/github/TheRohans/dapao/test_coverage)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c892a4997cd37710f644/test_coverage)](https://codeclimate.com/github/TheRohans/dapao/test_coverage)
 
 ## Lightweight 3D Physics for the Web and Beyond
 

@@ -25,10 +25,10 @@ jobs:
         node-version: '12.13.1'
     - name: npm install
       run: npm i
-    - name: npm test
-      run: npm test
     - name: npm build
       run: npm run build
+    - name: npm test
+      run: npm test
     - name: publish coverage
       uses: romeovs/lcov-reporter-action@v0.2.16
       with:

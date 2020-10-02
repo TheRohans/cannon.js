@@ -81,7 +81,8 @@
     "coverageReporters": [
       "html",
       "text",
-      "text-summary"
+      "text-summary",
+      "lcov"
     ],
     "globals": {
       "ts-jest": {

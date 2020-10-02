@@ -6,7 +6,7 @@
 
 ## Lightweight 3D Physics for the Web and Beyond
 
-Dapao is a Typescript port of the excellent [cannon.js](https://github.com/schteppe/cannon.js) library.
+Dapao is just a Typescript port of the [cannon.js](https://github.com/schteppe/cannon.js) library with some added tests.
 
 ## Project Goals
 

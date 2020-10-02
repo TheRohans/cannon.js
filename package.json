@@ -18,12 +18,14 @@
   ],
   "scripts": {
     "install:deps": "npm install --no-optional",
-    "test": "cross-env NODE_ENV=test karma start --log-level debug --browsers ChromeHeadless --single-run --code-coverage",
-    "build": "cross-env NODE_ENV=production node_modules/.bin/webpack --display-error-details --progress -p",
-    "lint": "tslint --config tslint.json --project ."
+    "test": "NODE_ENV=test npx jest ./src --coverage",
+    "__types": "NODE_ENV=production npx tsc",
+    "__compile": "NODE_ENV=production npx parcel build ./src/dapao.ts --no-source-maps --out-dir ./lib",
+    "__build": "npm run compile && npm run types",
+    "build": "NODE_ENV=production npx tsc"
   },
-  "main": "./lib/dapao.js",
-  "types": "./lib/types/main.d.ts",
+  "main": "./lib/types/dapao.js",
+  "types": "./lib/types/dapao.d.ts",
   "engines": {
     "node": "*"
   },
@@ -35,29 +37,58 @@
     "url": "https://github.com/TheRohans/dapao/issues"
   },
   "devDependencies": {
-    "@types/jasmine": "^2.6.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "cross-env": "^5.2.0",
-    "eslint": "^4.16.0",
-    "istanbul-instrumenter-loader": "^3.0.1",
-    "jasmine-core": "^2.8.0",
-    "jasmine-spec-reporter": "^3.2.0",
-    "karma": "^3.0.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-cli": "^1.0.1",
-    "karma-coverage-istanbul-reporter": "^0.2.0",
-    "karma-jasmine": "^1.1.0",
-    "karma-jasmine-html-reporter": "^0.2.2",
-    "karma-spec-reporter": "^0.0.31",
-    "karma-webpack": "^2.0.4",
-    "nodeunit": "^0.11.3",
-    "strip-loader": "^0.1.2",
-    "ts-loader": "^4.1.0",
-    "tslint": "^5.0.0",
-    "typescript": "^3.0.0",
-    "webpack": "^4.21.0",
-    "webpack-cli": "^3.1.0"
+    "@types/jest": "^23.3.14",
+    "@types/node": "^13.13.15",
+    "eslint": "^5.16.0",
+    "eslint-config-google": "^0.13.0",
+    "glslify-bundle": "^5.1.1",
+    "glslify-deps": "^1.3.1",
+    "jest": "^25.4.0",
+    "parcel-bundler": "^1.12.4",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.9.7"
   },
-  "dependencies": {}
+  "eslintConfig": {
+    "extends": "google",
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "env": {
+      "es6": true
+    },
+    "overrides": [
+      {
+        "files": [
+          "src/*.ts"
+        ],
+        "excludedFiles": "*.test.ts"
+      }
+    ],
+    "rules": {
+      "require-jsdoc": "off"
+    }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "verbose": true,
+    "testMatch": [
+      "**/?(*.)+(spec|test).+(ts|tsx|js)"
+    ],
+    "moduleNameMapper": {
+      "\\.(glsl)$": "<rootDir>/__mocks__/glslMock.ts"
+    },
+    "coverageDirectory": "<rootDir>/coverage",
+    "coverageReporters": [
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "ignoreCodes": "TS2307"
+        }
+      }
+    }
+  }
 }

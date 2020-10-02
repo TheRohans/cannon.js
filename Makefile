@@ -11,7 +11,6 @@ clean:
 	rm -rf coverage
 
 test:
-	npm run lint
 	npm run test
 
 release: clean test build publish

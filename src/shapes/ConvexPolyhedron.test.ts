@@ -1,7 +1,7 @@
 import { Vec3 } from '../math/Vec3';
 import { Quaternion } from '../math/Quaternion';
 import { HullResult, ConvexPolyhedron } from './ConvexPolyhedron';
-import { mockBoxHull, mockPolyBox, mockCube } from '../main.test';
+import { mockBoxHull, mockPolyBox, mockCube } from '../dapao.test';
 import { Body } from '../objects/Body';
 
 describe('ConvexPolyhedron', () => {
@@ -22,7 +22,7 @@ describe('ConvexPolyhedron', () => {
 
   it('should calculate surface normals given a cube (quad)', () => {
     const hullA = mockBoxHull(1);
-    hullA.faceNormals.forEach( fn => {
+    hullA.faceNormals.forEach(fn => {
       expect(fn.length()).toEqual(1);
     });
   });
@@ -30,7 +30,7 @@ describe('ConvexPolyhedron', () => {
   it('should calculate surface normals given a cube (tri)', () => {
     const mc = mockCube();
     const cp = new ConvexPolyhedron(mc[0], mc[2]);
-    cp.faceNormals.forEach( fn => {
+    cp.faceNormals.forEach(fn => {
       expect(fn.length()).toEqual(1);
     });
   });
@@ -477,7 +477,7 @@ describe('ConvexPolyhedron', () => {
     ];
 
     const scratch = new Vec3();
-    input.forEach( (v, i) => {
+    input.forEach((v, i) => {
       ConvexPolyhedron.computeNormal(v[0], v[1], v[2], scratch);
       // this is like this because javscript things 0 != -0
       // also it seems normals are negated from what you might expect

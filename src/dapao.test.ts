@@ -61,3 +61,10 @@ export const mockPolyBox = (sx: number, sy: number, sz: number) => {
   const box = new Box(new Vec3(sx, sy, sz));
   return box.convexPolyhedronRepresentation;
 };
+
+describe('Main', () => {
+  it('should just exist', () => {
+    expect(true).toEqual(true);
+  });
+});
+

@@ -1,5 +1,6 @@
 # Python compiled files
 *.pyc
+.cache
 
 # Temp files
 *~

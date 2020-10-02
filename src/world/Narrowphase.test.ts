@@ -6,7 +6,7 @@ import { ContactMaterial } from '../material/ContactMaterial';
 import { Vec3 } from '../math/Vec3';
 import { Quaternion } from '../math/Quaternion';
 import { HullResult, ConvexPolyhedron } from '../shapes/ConvexPolyhedron';
-import { mockCube, mockBoxHull } from '../main.test';
+import { mockCube, mockBoxHull } from '../dapao.test';
 import { ContactEquation } from 'equations/ContactEquation';
 
 
@@ -27,7 +27,7 @@ describe('Narrowphase', () => {
   //   });
   //   return hfShape;
   // };
-  beforeEach( () => {
+  beforeEach(() => {
     cm = new ContactMaterial();
     cm.friction = 0;
     cm.restitution = 0;
